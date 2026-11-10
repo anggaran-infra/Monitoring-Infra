@@ -1,0 +1,1089 @@
+<!doctype html>
+<html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="./config.js"></script>
+<script src="./mapping.js"></script>
+<script src="./fa-processor.js"></script>
+<script src="./supabase-adapter.js"></script>
+<style>
+:root{--navy:#142b49;--blue:#1665ba;--soft:#eaf2fc;--line:#e3eaf3;--gray:#63748c;--bg:#f6f9fd;--green:#05795b}*{box-sizing:border-box}body{margin:0;color:var(--navy);background:var(--bg);font:15px Arial,Helvetica,sans-serif}header{background:white;border-bottom:1px solid var(--line);padding:20px max(22px,calc((100vw - 1260px)/2));display:flex;gap:14px;align-items:center}.logo{background:var(--navy);color:white;display:grid;place-items:center;border-radius:13px;width:44px;height:44px;font-weight:800;font-size:20px}.brand strong{display:block;font:400 19px 'Russo One',Arial,sans-serif}.brand small{color:var(--gray)}main{max-width:1260px;margin:30px auto;padding:0 22px 45px}.intro{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;margin-bottom:22px}h1{font:400 clamp(22px,3vw,30px) 'Russo One',Arial,sans-serif;margin:0 0 6px}.sub{color:var(--gray);margin:0;line-height:1.7}.upload{background:white;border:1px dashed #adc3de;border-radius:18px;padding:23px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;box-shadow:0 5px 24px #1b3f6a09}.uploadText strong{display:block;font-size:15px;margin-bottom:6px}.uploadText small{color:var(--gray)}input[type=file]{display:none}button,.upload-btn{font:700 14px Arial,sans-serif;background:var(--blue);border:0;color:white;padding:12px 17px;border-radius:11px;cursor:pointer;display:inline-block}button:disabled{opacity:.4;cursor:default}.secondary{background:white;color:var(--blue);border:1px solid #bed3ed}.status{margin:14px 0 20px;color:var(--gray);font-size:13px;min-height:18px}.error{color:#ad3131}.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:22px}.metric{background:white;border:1px solid var(--line);border-radius:14px;padding:20px}.metric .label{font-size:12px;color:var(--gray);margin-bottom:9px}.metric .value{font:700 23px Arial,sans-serif;font-variant-numeric:tabular-nums}.metric small{color:var(--gray)}.toolbar{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin:20px 0 14px}.toolbar select{max-width:410px;width:100%;background:white;padding:12px;border-radius:10px;border:1px solid var(--line);font:600 14px Arial,sans-serif;color:var(--navy)}.section{background:white;border:1px solid var(--line);border-radius:17px;overflow:hidden;margin:0 0 16px;box-shadow:0 5px 20px #153b6308}.sectionhead{padding:18px 20px;background:#f9fbfe;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}.sectionhead h2{font:400 18px 'Russo One',Arial,sans-serif;margin:0}.sectionhead span{font-size:12px;color:var(--gray)}table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:13px 13px;text-align:right;border-bottom:1px solid #edf1f7;font-variant-numeric:tabular-nums}th:first-child,td:first-child{text-align:left}th{background:#eef4fb;color:#385577;font-weight:800}tbody tr:last-child td{border-bottom:0}tfoot td{font-weight:800;background:#f5f8fc;border-top:1px solid #d8e4f2}.tablewrap{overflow-x:auto}.finance{min-width:930px;table-layout:fixed}.finance th:first-child{width:153px}.finance th.group{text-align:center;padding:15px 8px;background:#e5f0fd;color:var(--navy);border-right:1px solid white}.finance th.group.non{background:#eaf6f2}.finance th.group small{display:block;font-size:11px;font-weight:500;color:#54736f;margin-top:4px}.finance th.cat{background:#f5f8fc;text-align:center}.finance tbody td:nth-child(5),.finance thead th:nth-child(5){border-left:1px solid #dce7f1}.amount{font-variant-numeric:tabular-nums}.empty{padding:35px;text-align:center;color:var(--gray)}.alert{padding:17px 20px;border-left:3px solid #bd7330;background:#fffaf3;margin:15px 0;border-radius:8px;color:#765226}.muted{color:var(--gray)}.spacer{height:4px}.chip{background:#edf4fc;color:#2763a5;padding:5px 9px;border-radius:100px;font-size:11px;font-weight:700}.special{padding:15px 20px 4px}.special h3{font:700 15px Arial,sans-serif;margin:12px 0}.special table{margin-bottom:12px}.note{font-size:12px;color:var(--gray);line-height:1.7;margin:22px 0}#results{display:none}.filters{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.filters{display:grid;grid-template-columns:repeat(3,minmax(180px,1fr));flex:1}.filters select{min-width:0;max-width:none}.toolbar{align-items:center}@media(max-width:780px){.filters{grid-template-columns:1fr;width:100%}}.filters label{font-size:13px;color:var(--gray);font-weight:700}.metric .percent{font-size:25px}.codehighlight{background:#eaf2fc;font-weight:700}.grand-total{margin-top:28px;border:2px solid #b8cfe9}.grand-total .sectionhead{background:#eaf2fc}.grand-total tfoot td{background:#e5f0fd;font-weight:800}.grand-total .sectionhead h2{font-size:18px}.filter-help{font-size:12px;color:var(--gray);padding:0 0 13px}@media(max-width:850px){.metrics{grid-template-columns:repeat(2,1fr)}.intro{display:block}.metric .value{font-size:17px}}@media(max-width:520px){.metrics{grid-template-columns:1fr 1fr}.metric{padding:14px}.metric .value{font-size:15px}.brand strong{font-size:14px}}
+
+.historyPanel{margin-top:14px;background:#fff;border:1px solid var(--line);border-radius:15px;padding:18px 20px;display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.historyPanel strong{font-size:15px;display:block;margin-bottom:7px}.historyPanel small{color:var(--gray)}.historyControls{display:flex;gap:10px;align-items:center;flex:1;justify-content:flex-end;flex-wrap:wrap}.historyControls select{min-width:270px;max-width:560px;flex:1;padding:12px;border:1px solid var(--line);border-radius:10px;background:white;color:var(--navy);font:14px Arial,sans-serif}
+.filemeta{font-size:13px;color:#435c79;margin:8px 0 0}.filemeta strong{color:var(--navy)}
+.modalBackdrop{position:fixed;inset:0;background:rgba(15,35,62,.58);display:none;z-index:99;align-items:center;justify-content:center;padding:22px}.modalBackdrop.open{display:flex}.modal{background:white;max-width:540px;width:100%;padding:27px;border-radius:18px;box-shadow:0 20px 80px #0c1e3c50}.modal h2{font:400 21px 'Russo One',Arial,sans-serif;margin:0 0 12px}.modal p{color:var(--gray);line-height:1.65}.modal .actions{display:flex;gap:9px;flex-wrap:wrap;justify-content:flex-end;margin-top:21px}.modal .actions button{font-size:13px}.modal .actions .cancel{color:#a33;border-color:#e1caca}
+@media(max-width:700px){.historyControls{width:100%;justify-content:stretch}.historyControls select{width:100%;min-width:0}.modal .actions{flex-direction:column}.modal .actions button{width:100%}}
+
+/* Dashboard visual refinement — v6; seluruh logika FA Detail tetap dari v5 */
+:root{--navy:#142b49;--blue:#225bba;--soft:#edf5ff;--line:#e4eaf3;--gray:#72809a;--bg:#f4f7fc;--teal:#2cc6c3}
+body{font-size:14px;background:linear-gradient(165deg,#f8fbff 0%,#f4f7fc 43%,#eef3fa 100%);min-height:100vh}
+header.topbar{max-width:1450px;margin:19px auto 0;border-radius:21px;border:1px solid #e7eef7;box-shadow:0 15px 35px #1b39690b;padding:16px 25px;gap:28px;justify-content:space-between}
+.brandlock{display:flex;align-items:center;gap:12px;min-width:235px}.brand strong{font-size:18px}.brand small{font-size:11px}.logo{width:43px;height:43px;background:linear-gradient(140deg,#153869,#2bb5d1);border-radius:11px;font:400 16px 'Russo One',Arial,sans-serif}
+.topnav{display:flex;gap:7px;align-items:center}.topnav .navtab{background:transparent;color:#65768e;font-weight:700;border-radius:30px;padding:11px 17px;white-space:nowrap;font-size:13px}.topnav .navtab.active,.topnav .navtab:hover{background:#1f4f89;color:#fff;box-shadow:0 4px 12px #214c8126}
+.topbar-right{display:flex;align-items:center;gap:8px;color:#667a97;font-size:12px;font-weight:700;white-space:nowrap}.live-dot{width:8px;height:8px;border-radius:50%;background:#22bbaa;box-shadow:0 0 0 5px #e5faf6}
+main{max-width:1450px;margin:27px auto;padding:0 29px 60px;scroll-margin-top:15px}#overview,#rekap,#riwayat{scroll-margin-top:25px}
+.intro{margin:0 0 26px;align-items:center}.intro h1{font-size:clamp(26px,3.3vw,37px);letter-spacing:-.5px;margin-bottom:9px}.sub{font-size:14px}.chip{background:#e8f2ff;padding:9px 14px;font-size:12px}
+.upload{border:1px dashed #bdcde0;border-radius:20px;padding:20px 25px;background:#ffffffd9}.uploadText strong{font-size:16px}.upload-btn{padding:14px 20px;box-shadow:0 5px 10px #225bba26}
+.historyPanel{margin-top:15px;border-radius:18px;box-shadow:0 3px 10px #153b6307}.historyPanel strong{font-size:15px}.status{margin:11px 0 14px}
+.metrics{gap:15px;margin:24px 0 20px}.metric{border-radius:20px;padding:22px 22px 19px;box-shadow:0 8px 20px #1b39690a;min-height:142px;position:relative;overflow:hidden}.metric:before{content:'';width:7px;height:7px;position:absolute;right:22px;top:22px;border:2px solid #b6d9e9;border-radius:50%}.metric:first-child{background:linear-gradient(130deg,#143c74,#2466a4);border-color:#194b8c;color:#fff}.metric:first-child .label,.metric:first-child small{color:#d4e6fc}.metric:first-child:before{border-color:#6dbad8}.metric .label{font-size:13px;margin-bottom:14px}.metric .value{font-size:clamp(18px,2vw,25px);letter-spacing:-.4px;white-space:nowrap}.metric small{font-size:12px;display:block;margin-top:7px}
+.insight-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:16px;margin:0 0 32px}.insight-card{min-width:0;background:#fff;border:1px solid var(--line);border-radius:21px;padding:22px;box-shadow:0 9px 24px #1b39690a}.insight-title{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.eyebrow{color:#238faf;font-size:10px;font-weight:800;letter-spacing:1.2px}.insight-title h3{font-size:19px;margin:7px 0 0;letter-spacing:-.35px}.soft-pill{background:#eff6fd;color:#55759b;border-radius:35px;padding:7px 10px;font-size:11px;white-space:nowrap}.donut-layout{display:flex;align-items:center;gap:27px;padding:24px 1px 8px}.donut{width:193px;height:193px;flex:0 0 193px;display:grid;place-items:center;border-radius:50%;background:conic-gradient(#225bba 0 var(--travel),#2cc6c3 var(--travel) var(--non),#dce5f1 var(--non) 100%)}.donut-inner{width:136px;height:136px;background:#fff;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}.donut-inner span{font-size:29px;font-weight:800}.donut-inner small{font-size:11px;color:var(--gray)}.legend{display:grid;grid-template-columns:minmax(110px,1fr) auto;gap:15px 12px;align-items:center;width:100%;font-size:12px}.legend span{display:flex;align-items:center;gap:7px;color:#61718a}.legend strong{text-align:right;font-size:12px;white-space:nowrap}.legdot{height:10px;width:10px;border-radius:3px;display:inline-block;flex-shrink:0}
+.unit-bars{display:flex;flex-direction:column;gap:13px;margin-top:23px}.unit-bar{display:grid;grid-template-columns:minmax(88px,120px) minmax(50px,1fr) minmax(75px,108px);align-items:center;gap:10px;font-size:12px}.bar-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#526682;font-weight:700}.bar-track{height:15px;border-radius:7px;background:#edf3fa;display:flex;overflow:hidden}.bar-travel,.bar-non{height:100%}.bar-travel{background:#225bba}.bar-non{background:#2cc6c3}.bar-total{text-align:right;font-weight:700;font-size:11px;color:#364f6f}.bar-legend{display:flex;gap:16px;justify-content:flex-end;color:#70809a;font-size:11px;margin-top:18px}.bar-legend span{display:flex;align-items:center;gap:6px}
+.rekap-head{margin:0 0 16px}.rekap-head h2{margin:6px 0 5px;font:400 23px 'Russo One',Arial,sans-serif}.rekap-head p{margin:0;color:var(--gray);font-size:13px}
+.toolbar{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 5px 20px #153b6308;margin:0 0 17px;align-items:end}.filters{grid-template-columns:repeat(3,minmax(130px,1fr));gap:10px}.filter-control{min-width:0;display:flex;flex-direction:column;gap:7px}.filters label{font-size:12px;color:#536987}.toolbar select{border-radius:10px;padding:12px;min-height:45px}#exportButton{min-height:45px}.section{border-radius:19px;box-shadow:0 6px 22px #153b6309;margin-bottom:18px}.sectionhead{background:#fff;padding:22px 22px 18px}.sectionhead h2{font-size:19px}.finance th.group{background:#e8f0fc}.finance th.group.non{background:#e6f7f4}th,td{padding:13px 11px}.grand-total{border:1px solid #9dc0e3}.grand-total .sectionhead{background:#ecf5ff}
+@media(max-width:1150px){.topbar-right{display:none}.donut-layout{gap:14px}.donut{width:155px;height:155px;flex-basis:155px}.donut-inner{width:110px;height:110px}.legend{gap:8px}.legend strong{font-size:11px}}
+@media(max-width:900px){.insight-grid{grid-template-columns:1fr}.topbar{flex-wrap:wrap}.topnav{order:3;width:100%;overflow-x:auto}.metrics{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:680px){header.topbar{margin:0;border-radius:0;padding:13px 17px}.topnav{gap:0}.topnav .navtab{font-size:11px;padding:10px 12px}main{padding:0 15px 45px}.intro h1{font-size:26px}.metrics{gap:9px}.metric{padding:15px;min-height:115px}.metric .value{font-size:16px}.metric .label{font-size:11px}.metric small{font-size:10px}.donut-layout{flex-wrap:wrap;justify-content:center}.legend{max-width:350px}.filters{grid-template-columns:1fr}.toolbar{align-items:stretch}.toolbar button{width:100%}.unit-bar{grid-template-columns:90px minmax(50px,1fr) 80px}}
+
+
+/* v7 — nilai rupiah dan persentase setiap kategori, termasuk rincian BUK */
+.insight-grid{grid-template-columns:minmax(0,0.90fr) minmax(0,1.35fr)}
+.donut-layout{align-items:center;gap:20px}
+.composition-list{min-width:0;flex:1;display:flex;flex-direction:column;gap:11px}
+.composition-row{display:grid;grid-template-columns:minmax(105px,1fr) auto auto;gap:8px;align-items:center;font-size:12px}
+.composition-name{display:flex;align-items:center;gap:7px;min-width:0;color:#586e89}
+.composition-row strong{color:#253b5a;font-size:12px;white-space:nowrap;text-align:right}
+.composition-percent{color:#225bba;background:#eef5ff;border-radius:20px;min-width:46px;padding:4px 6px;text-align:right;font-weight:700;font-size:11px}
+.unit-bars{gap:16px;margin-top:20px}
+.unit-comparison{border-bottom:1px solid #ecf0f6;padding-bottom:14px}
+.unit-comparison:last-child{border-bottom:0;padding-bottom:0}
+.unit-comparison-top{display:grid;grid-template-columns:minmax(110px,155px) minmax(65px,1fr) minmax(110px,145px);gap:10px;align-items:center}
+.unit-name{color:#405574;font-size:12px;line-height:1.35}
+.bar-scale{min-width:0}
+.unit-comparison .bar-track{height:16px;min-width:0;background:#eaf1fa;border-radius:9px;display:flex;overflow:hidden}
+.bar-segment{height:100%;min-width:0}
+.unit-total{text-align:right;font-size:11px;color:#344d71;white-space:nowrap}
+.unit-breakdown{margin:9px 0 0 165px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 11px}
+.unit-breakdown-item{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:7px;font-size:10px;min-width:0}
+.unit-breakdown-item span{display:flex;align-items:center;gap:5px;color:#63738b;min-width:0}
+.unit-breakdown-item strong{white-space:nowrap;color:#354e71;font-size:10px}
+.unit-breakdown-item em{font-style:normal;font-weight:700;white-space:nowrap;color:#20609d;background:#eef5fc;border-radius:12px;padding:3px 5px;font-size:10px}
+.bar-legend{flex-wrap:wrap;gap:8px 15px;justify-content:flex-start}
+.composition-note{font-size:11px;color:#718099;margin:12px 0 0;line-height:1.5}
+@media(max-width:1250px){.insight-grid{grid-template-columns:1fr}.unit-breakdown{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.composition-list{width:100%}.composition-row{grid-template-columns:minmax(0,1fr) auto auto}.unit-comparison-top{grid-template-columns:minmax(75px,105px) minmax(50px,1fr) minmax(85px,110px);gap:6px}.unit-name{font-size:11px}.unit-total{font-size:10px}.unit-breakdown{margin-left:0;grid-template-columns:1fr}.unit-breakdown-item{font-size:11px}}
+
+/* v8 — baris ringkas untuk All dan posisi legenda sejajar dengan batang. */
+.unit-comparison-top{grid-template-columns:minmax(155px,210px) minmax(0,1fr) minmax(142px,185px);gap:14px}
+.unit-breakdown{margin:9px 0 0 0;grid-column:2 / 4;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 18px;min-width:0}
+.unit-comparison{display:grid;grid-template-columns:minmax(155px,210px) minmax(0,1fr) minmax(142px,185px);column-gap:14px;row-gap:0}
+.unit-comparison-top{display:contents}
+.unit-comparison-top>.unit-name{grid-column:1;grid-row:1;align-self:center}
+.unit-comparison-top>.bar-scale{grid-column:2;grid-row:1;align-self:center}
+.unit-comparison-top>.unit-total{grid-column:3;grid-row:1;align-self:center}
+.unit-breakdown-item{font-size:12px;grid-template-columns:minmax(100px,1fr) auto auto;gap:8px}
+.unit-breakdown-item strong{font-size:12px}
+.unit-breakdown-item em{font-size:11px}
+.unit-comparison .bar-track{height:18px}
+.unit-comparison.is-aggregate{border-bottom:0;padding-bottom:3px}
+.unit-comparison.is-aggregate .bar-track{height:23px}
+@media(max-width:1000px){.unit-comparison{grid-template-columns:minmax(120px,165px) minmax(0,1fr) minmax(120px,155px);column-gap:10px}.unit-breakdown{grid-template-columns:1fr}}
+@media(max-width:600px){.unit-comparison{grid-template-columns:minmax(0,1fr) auto;column-gap:10px;row-gap:9px}.unit-comparison-top>.unit-name{grid-column:1;grid-row:1}.unit-comparison-top>.unit-total{grid-column:2;grid-row:1}.unit-comparison-top>.bar-scale{grid-column:1 / -1;grid-row:2}.unit-breakdown{grid-column:1 / -1;grid-row:3;margin-top:0}.unit-breakdown-item{grid-template-columns:minmax(0,1fr) auto auto}}
+
+/* v9 — persentase pada bar, tipografi kontras, dan ikon anggaran pengganti KI. */
+.logo{display:grid;place-items:center}
+.logo svg{display:block}
+.unit-comparison .bar-track{height:30px;border-radius:10px}
+.unit-comparison.is-aggregate .bar-track{height:34px}
+.unit-comparison .bar-segment{display:flex;align-items:center;justify-content:center;overflow:hidden;white-space:nowrap;min-width:0;position:relative}
+.segment-percent{display:block;padding:0 2px;font:700 11px Arial,Helvetica,sans-serif;letter-spacing:-.15px;font-variant-numeric:tabular-nums;line-height:1;text-shadow:0 1px 1px #00000015}
+.segment-light .segment-percent{color:white}
+.segment-ink .segment-percent{color:#153149;text-shadow:none}
+.unit-breakdown-item{grid-template-columns:minmax(105px,1fr) auto;gap:8px}
+.unit-breakdown-item em{display:none}
+@media(max-width:1050px){.segment-percent{font-size:10px}.unit-comparison .bar-track{height:28px}}
+@media(max-width:730px){.unit-comparison .bar-track{height:27px}.segment-percent{font-size:9px;letter-spacing:-.35px}}
+@media(max-width:520px){.segment-percent{display:none}.unit-comparison .bar-track{height:22px}.unit-comparison.is-aggregate .bar-track{height:25px}}
+
+/* V11: donut tetap, grafik batang membandingkan tiap unit dalam mode All. */
+.unit-bars{display:flex;flex-direction:column;gap:0;margin-top:16px}
+.unit-comparison.is-all{padding-top:10px;padding-bottom:11px;row-gap:0}
+.unit-comparison.is-all .bar-track{height:29px}
+.unit-comparison.is-all .unit-name{font-size:12px}
+.unit-comparison.is-all .unit-breakdown{display:none}
+.unit-comparison.is-filtered{padding-top:12px}
+.unit-comparison.is-filtered .bar-track{height:34px}
+.unit-comparison .bar-scale{min-width:0}
+.unit-comparison .bar-track{display:flex;max-width:100%;overflow:hidden}
+.segment-percent{font-size:clamp(9px,0.85vw,12px);font-weight:700;white-space:nowrap;line-height:1}
+.unit-comparison.is-all .segment-percent{font-size:10px}
+@media(max-width:1100px){.unit-comparison.is-all .segment-percent{font-size:9px}}
+@media(max-width:650px){.unit-comparison.is-all{row-gap:7px}.unit-comparison.is-all .bar-track{height:29px}.unit-comparison.is-filtered .bar-track{height:33px}}
+@media(max-width:520px){.unit-comparison .segment-percent{display:block;font-size:9px}.unit-comparison.is-all .segment-percent{font-size:8px}}
+
+
+/* V15: dua pemilih unit kerja dengan pilihan tandai */
+.analysis-unit-field{min-width:0;display:flex;flex-direction:column;gap:8px}
+.analysis-label{font:700 12px Arial,sans-serif;color:#4d6180}
+.analysis-unit-field>small{font:12px/1.5 Arial,sans-serif;color:#76869c}
+.analysis-check-dropdown{position:relative;border:1px solid #d6e3f1;border-radius:12px;background:#fff;min-width:0}
+.analysis-check-dropdown[open]{border-color:#2c91c3;box-shadow:0 0 0 2px #2c91c322}
+.analysis-check-dropdown>summary{list-style:none;cursor:pointer;min-height:46px;padding:13px 38px 12px 14px;color:#213b5b;font:13px Arial,sans-serif;position:relative;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.analysis-check-dropdown>summary::-webkit-details-marker{display:none}
+.analysis-check-dropdown>summary:after{content:'⌄';position:absolute;right:14px;top:9px;font-size:20px;color:#486a8b}
+.analysis-check-options{padding:7px;max-height:240px;overflow:auto;border-top:1px solid #e7edf6}
+.analysis-check-options label{display:flex;flex-direction:row;align-items:center;gap:10px;padding:9px 8px;font:13px/1.4 Arial,sans-serif;color:#243e60;cursor:pointer;border-radius:8px}
+.analysis-check-options label:hover{background:#f1f7fd}
+.analysis-check-options input[type=checkbox]{accent-color:#2365bc;width:17px;height:17px;flex:none;margin:0}
+.analysis-check-options .choice-all{font-weight:700;border-bottom:1px solid #e7edf6;border-radius:0;margin-bottom:4px}
+.analysis-choice-message{padding:12px;font:12px/1.6 Arial,sans-serif;color:#667993}
+
+/* V13 — halaman analisis simulasi, terpisah dari ringkasan */
+.analysis-page{display:none}
+body.analysis-mode .analysis-page{display:block;max-width:1250px;margin:22px auto 48px}
+body.analysis-mode main>:not(#simulasi){display:none!important}
+.analysis-heading{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;margin:18px 0 22px}
+.analysis-heading h1{font:400 clamp(24px,2.6vw,36px) 'Russo One',Arial,sans-serif;color:var(--ink);margin:8px 0}
+.analysis-heading p{font:14px/1.6 Arial,sans-serif;color:var(--gray);margin:0;max-width:850px}
+.analysis-heading button{white-space:nowrap}
+.analysis-note{background:#ecf5ff;border:1px solid #b9d5f2;border-radius:14px;padding:17px 20px;color:#28496b;font-size:13px;line-height:1.7;margin-bottom:20px}
+.analysis-card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:24px;margin-bottom:18px;box-shadow:0 7px 19px #1b39690a}
+.analysis-card h2{margin:0 0 6px;font-size:20px;color:var(--ink)}
+.analysis-card-title{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;margin-bottom:18px}
+.analysis-card-title p{margin:0;color:var(--gray);font-size:12px;line-height:1.6}
+.analysis-filters{display:grid;grid-template-columns:1fr 1.5fr;gap:16px;margin:14px 0}
+.analysis-filters label{font:700 12px Arial,sans-serif;color:#4d6180;display:flex;flex-direction:column;gap:9px}
+.analysis-filters select,.analysis-filters input{width:100%;min-width:0;border:1px solid #d6e3f1;border-radius:12px;padding:12px 14px;background:#fff;color:#213b5b;font:13px Arial,sans-serif;min-height:46px}
+.analysis-filters select:focus,.analysis-filters input:focus{outline:2px solid #2c91c3;outline-offset:1px}
+.analysis-placeholder{background:#f5f8fc;border:1px dashed #d7e3f0;border-radius:13px;padding:16px;color:#697b95;font-size:13px;line-height:1.7;margin-top:15px}
+.analysis-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
+.analysis-actions button{min-height:42px}
+.analysis-actions button:disabled{opacity:.45;cursor:not-allowed}
+.analysis-result{border-radius:13px;padding:14px 16px;margin:14px 0;font-size:13px;line-height:1.65}
+.analysis-result.ok{border:1px solid #b8dfd0;background:#ebf8f3;color:#185b48}
+.analysis-result.no{border:1px solid #efc6c6;background:#fff1f0;color:#8e2929}
+.analysis-result.warn{border:1px solid #efd5ac;background:#fff7e9;color:#785019}
+.analysis-table{margin-top:18px;overflow:auto;border-radius:12px;border:1px solid #e0eaf4}
+.analysis-table table{width:100%;border-collapse:collapse;font-size:12px}
+.analysis-table th{background:#ecf3fc;color:#274968;text-align:right;font-weight:700}
+.analysis-table td{text-align:right;white-space:nowrap}
+.analysis-table th:first-child,.analysis-table td:first-child{text-align:left;white-space:normal;min-width:190px}
+.analysis-total{font-weight:700;background:#eaf4ff}
+.analysis-kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:16px 0}
+.analysis-kpi{border-radius:12px;background:#f4f8fd;padding:14px;min-width:0}
+.analysis-kpi span{font-size:11px;color:#667993;display:block;margin-bottom:6px}
+.analysis-kpi strong{font-size:16px;color:#1c3c61;word-break:break-word}
+.analysis-footnote{font-size:12px;color:#65768e;line-height:1.75;margin:20px 2px}
+@media(max-width:800px){.analysis-filters{grid-template-columns:1fr}.analysis-heading{flex-direction:column}.analysis-kpis{grid-template-columns:1fr}.analysis-card{padding:17px}}
+
+/* V18: pilihan checkbox horizontal, selebar dropdown; mengalahkan .analysis-filters label */
+.analysis-filters .analysis-check-options label{
+ display:flex!important;flex-direction:row!important;align-items:center!important;
+ justify-content:flex-start!important;width:100%;min-height:44px;gap:12px;
+ padding:10px 12px;margin:0;box-sizing:border-box;line-height:1.4;
+ font:400 14px/1.4 Arial,sans-serif;white-space:normal;text-align:left;
+ cursor:pointer;border-radius:9px;
+}
+.analysis-filters .analysis-check-options label span{display:block;flex:1;min-width:0;overflow-wrap:anywhere;}
+.analysis-filters .analysis-check-options input[type=checkbox]{
+ display:block!important;appearance:auto!important;-webkit-appearance:checkbox!important;
+ width:18px!important;height:18px!important;min-height:18px!important;
+ flex:0 0 18px!important;padding:0!important;margin:0!important;cursor:pointer;
+ accent-color:#2365bc;
+}
+.analysis-check-options{width:100%;max-height:280px;padding:6px;overflow-y:auto;box-sizing:border-box;}
+.analysis-check-dropdown{width:100%;box-sizing:border-box;}
+.analysis-filters .analysis-check-options label:hover{background:#eef5ff;}
+.analysis-inline-upload{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:12px 0 18px;}
+.analysis-inline-upload .secondary{font:700 13px Arial,sans-serif;padding:12px 16px;}
+.analysis-upload-status{font:13px/1.6 Arial,sans-serif;color:#526b87;}
+.analysis-card .analysis-filters{grid-template-columns:minmax(290px,1fr) minmax(350px,1.35fr)}
+@media(max-width:850px){.analysis-card .analysis-filters{grid-template-columns:minmax(0,1fr)}}
+
+/* v22: kandidat dipilih manual atau otomatis */
+.analysis-pick-actions{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+.analysis-advice-row{grid-template-columns:minmax(0,1fr) auto!important}
+.analysis-select-source{display:flex;align-items:center;gap:8px;border-radius:10px;padding:9px 12px;background:#eaf3ff;color:#174b86;font-weight:700;cursor:pointer;white-space:nowrap}
+.analysis-select-source input{width:17px;height:17px;accent-color:#235bb8}
+.analysis-pick-summary{margin-top:14px;padding:14px 16px;border:1px solid #bcd9ed;background:#f0f8ff;border-radius:12px;line-height:1.6;font-size:13px}
+.analysis-pick-summary strong{color:#183b5c}
+.analysis-pick-buttons{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.analysis-pick-buttons button{font-size:12px}
+@media(max-width:650px){.analysis-select-source{justify-content:center}}
+/* v20: rekomendasi sumber menggantikan pilihan dropdown manual */
+.analysis-wide-field{display:flex;flex-direction:column;gap:9px;min-width:0}
+.analysis-wide-field>label,.analysis-wide-field>.analysis-label{font:700 12px Arial,sans-serif;color:#4d6180}
+.analysis-wide-field select,.analysis-wide-field textarea{width:100%;min-width:0;border:1px solid #d6e3f1;border-radius:12px;padding:13px 14px;background:white;color:#213b5b;font:14px/1.5 Arial,sans-serif}
+.analysis-wide-field textarea{resize:vertical;min-height:96px}
+.analysis-advice-list{display:grid;gap:11px;margin-top:12px}
+.analysis-advice-row{border:1px solid #dce8f5;background:#fafdff;border-radius:12px;padding:14px 16px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center}
+.analysis-advice-row strong{display:block;line-height:1.5}.analysis-advice-row small{color:#637790;display:block;margin-top:5px;line-height:1.6}
+.analysis-advice-row button{white-space:nowrap}.analysis-explain{font-size:12px;color:#637790;line-height:1.7;margin:10px 0}
+@media(max-width:650px){.analysis-advice-row{grid-template-columns:1fr}.analysis-advice-row button{width:100%}}
+
+/* V24 — ringkasan eksekutif dan aksi per kelompok */
+.analysis-cluster-tools .unit-clear{color:#9b3c3c;background:#fff;border-color:#e8c8c8}
+.analysis-cluster-tools .unit-clear:hover{background:#fff1f1}
+.analysis-exec{margin-top:16px;border:1px solid #c9daec;border-radius:16px;background:#f8fbff;padding:20px;display:grid;gap:14px}
+.analysis-exec-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.analysis-exec-head h3{margin:0;font-size:19px;color:#163252}
+.analysis-exec-status{font-weight:700;font-size:12px;padding:7px 11px;border-radius:30px;background:#e4f4ea;color:#14663a}
+.analysis-exec-status.warn{background:#fff1dc;color:#8b4f16}
+.analysis-exec-status.neutral{background:#eaf1f9;color:#435e7e}
+.analysis-exec-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.analysis-exec-kpi{background:white;border:1px solid #dce7f4;border-radius:12px;padding:14px;min-width:0}
+.analysis-exec-kpi small{display:block;color:#637994;font-size:12px;margin-bottom:7px}
+.analysis-exec-kpi strong{font-size:17px;color:#193d67;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.analysis-exec-kpi .analysis-source-names{font-size:14px;line-height:1.55;display:block}
+.analysis-exec-insight{border-top:1px solid #dce7f4;padding-top:12px;font-size:14px;line-height:1.7;color:#23415f}
+.analysis-exec-insight strong{color:#153a63}
+@media(max-width:950px){.analysis-exec-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:550px){.analysis-exec-grid{grid-template-columns:1fr}.analysis-cluster-tools{width:100%}.analysis-cluster-tools button{flex:1}}
+
+/* V23 — rekomendasi dan simulasi dikelompokkan menurut unit kerja */
+.analysis-cluster{border:1px solid #dce8f5;border-radius:14px;margin:13px 0;overflow:hidden;background:#fff}
+.analysis-cluster-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 15px;background:#edf5ff;border-bottom:1px solid #dce8f5;flex-wrap:wrap}
+.analysis-cluster-head strong{font-size:14px;color:#183b60}
+.analysis-cluster-head small{font:12px Arial,sans-serif;color:#476483}
+.analysis-cluster-tools{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.analysis-cluster-tools button{border:1px solid #a9caee;border-radius:9px;background:#fff;color:#2159a5;font:700 12px Arial,sans-serif;padding:8px 11px;cursor:pointer}
+.analysis-cluster-tools button:hover{background:#e3f0ff}
+.analysis-cluster .analysis-advice-list{margin:0;gap:0}
+.analysis-cluster .analysis-advice-row{border:0;border-radius:0;border-bottom:1px solid #edf2f9;background:#fff;padding:12px 15px}
+.analysis-cluster .analysis-advice-row:last-child{border-bottom:0}
+.analysis-cluster .analysis-select-source{margin:0;flex-direction:row!important;align-items:center!important}
+.analysis-cluster .analysis-select-source span{white-space:nowrap}
+.analysis-unit-summary{border:1px solid #d6e5f6;border-radius:13px;margin-top:13px;overflow:hidden}
+.analysis-unit-summary-head{display:flex;justify-content:space-between;align-items:center;gap:10px;background:#eaf3ff;padding:12px 15px;font-size:14px;color:#193c65}
+.analysis-unit-summary-head strong{font-weight:700}
+.analysis-unit-summary-head span{font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.analysis-unit-summary-item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:center;padding:11px 15px;border-top:1px solid #e9eff7;font-size:13px;color:#29445f}
+.analysis-unit-summary-item .analysis-code{font-weight:700;overflow-wrap:anywhere}
+.analysis-unit-summary-item .analysis-detail{font-size:12px;color:#698099;margin-top:4px}
+.analysis-unit-summary-item .analysis-money{font-variant-numeric:tabular-nums;font-weight:700;white-space:nowrap}
+@media(max-width:650px){.analysis-unit-summary-item{grid-template-columns:1fr}.analysis-unit-summary-item .analysis-money{justify-self:start}}
+
+/* v28 – Halaman tersendiri klasifikasi 521/522/524 nonoperasional */
+.nonop-page{display:none}
+body.nonop-mode .nonop-page{display:block;max-width:1250px;margin:20px auto 52px}
+body.nonop-mode main>:not(#jenisBelanja){display:none!important}
+.nonop-heading{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:22px}
+.nonop-heading h1{margin:6px 0 9px}
+.nonop-heading p{margin:0;color:#62748e;line-height:1.65;max-width:800px}
+.nonop-toolbar{display:flex;align-items:flex-end;justify-content:space-between;gap:13px;flex-wrap:wrap;padding:20px;border:1px solid var(--line);border-radius:17px;background:white;margin-bottom:18px}
+.nonop-control{display:flex;flex-direction:column;gap:7px;flex:1 1 280px;max-width:560px}
+.nonop-control label{font-size:13px;font-weight:700;color:#526b89}
+.nonop-control select{min-height:47px;width:100%;padding:12px;border:1px solid #cbdbee;border-radius:11px;color:var(--navy);background:white;font:600 14px Arial,sans-serif}
+.nonop-actions{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.nonop-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:20px}
+.nonop-card{padding:18px;background:white;border:1px solid #dfe8f4;border-radius:16px;min-width:0}
+.nonop-card .tag{font-size:12px;font-weight:700;color:#56708b}
+.nonop-card strong{display:block;margin-top:10px;font-size:20px;font-variant-numeric:tabular-nums}
+.nonop-card small{display:block;color:#677a94;margin-top:5px;font-size:12px}
+.nonop-table{min-width:840px}
+.nonop-table th{font-size:13px}
+.nonop-table th:not(:first-child){text-align:right}
+.nonop-table td:first-child{font-weight:600}
+.nonop-table .nonop-head td{background:#eaf2fc;font-weight:800;color:#203f66;border-top:1px solid #d1e2f6}
+.nonop-table .nonop-subtotal td{background:#f2f7fd;font-weight:800}
+.nonop-table .nonop-grand td{background:#dfebfb;font-weight:800;border-top:2px solid #99b9dd}
+.nonop-table td{padding:12px 15px}
+.nonop-desc{font-size:12px;color:#70849d;margin-top:8px;line-height:1.6}
+.nonop-alert{padding:14px 17px;border:1px solid #c9dbea;border-radius:12px;background:#eef6ff;color:#375b7f;margin:0 0 17px;font-size:13px;line-height:1.6}
+@media(max-width:800px){.nonop-cards{grid-template-columns:1fr}.nonop-actions{width:100%}.nonop-actions button{flex:1}}
+
+/* Lapisan autentikasi Supabase, nonaktifkan seluruh layar sebelum pengguna login. */
+body:not(.signed-in)>header,body:not(.signed-in)>main,body:not(.signed-in)>#decisionModal{visibility:hidden}
+.login-gate{position:fixed;z-index:2000;inset:0;align-items:center;justify-content:center;background:linear-gradient(135deg,#edf5ff,#f7fbff);padding:24px;overflow:auto}
+.login-panel{background:#fff;border:1px solid #dfe8f5;border-radius:24px;padding:34px;max-width:430px;width:100%;box-shadow:0 18px 65px #19396320}
+.login-panel h1{font:400 25px 'Russo One',Arial,sans-serif;margin:15px 0 10px;color:#142b49}
+.login-panel p{font:14px/1.7 Arial,sans-serif;color:#61748e}
+.login-panel small{display:block;color:#677a90;margin-top:16px;font-size:11px;line-height:1.5}
+.login-mark{height:44px;width:44px;background:linear-gradient(145deg,#1e5ca1,#2bc5c0);border-radius:12px;display:grid;place-items:center;color:white;font-size:24px}
+.login-form{display:grid;gap:15px;margin-top:22px}
+.login-form label{display:grid;gap:7px;font:700 13px Arial,sans-serif;color:#405b79}
+.login-form input{border:1px solid #cadbed;border-radius:11px;padding:12px 13px;font:14px Arial,sans-serif;width:100%;min-height:45px}
+.login-form button{margin-top:3px;min-height:46px}
+.login-error{color:#a32929!important;font-size:12px!important;min-height:16px}
+</style></head><body>
+<section id="loginGate" class="login-gate" aria-label="Masuk aplikasi" style="display:flex">
+ <div class="login-panel">
+  <div class="login-mark">▥</div>
+  <h1>FA Detail Kemenko Infra</h1>
+  <p>Masuk untuk membuka dashboard anggaran dan riwayat laporan pribadi yang tersimpan di Supabase.</p>
+  <form id="loginForm" class="login-form">
+   <label>Email pengguna<input id="authEmail" type="email" autocomplete="username" placeholder="email@instansi.go.id" required></label>
+   <label>Kata sandi<input id="authPassword" type="password" autocomplete="current-password" required></label>
+   <button id="authSubmit" type="submit">Masuk</button>
+  </form>
+  <p id="authError" role="alert" class="login-error"></p>
+  <small>Hanya akun yang dibuat/diundang oleh administrator Supabase yang dapat masuk.</small>
+ </div>
+</section>
+<header class="topbar"><div class="brandlock"><div class="logo" aria-label="Ikon ringkasan anggaran"><svg viewBox="0 0 32 32" width="27" height="27" aria-hidden="true" focusable="false"><rect x="5" y="17" width="5" height="10" rx="1.5" fill="#ffffff"/><rect x="13.5" y="11" width="5" height="16" rx="1.5" fill="#ffffff"/><rect x="22" y="5" width="5" height="22" rx="1.5" fill="#a5f3ee"/><path d="M4 28.5H28" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="brand"><strong>Kemenko Infra</strong><small>Budget Intelligence</small></div></div><nav class="topnav" aria-label="Navigasi dashboard"><button type="button" class="navtab active" data-target="overview">Ringkasan</button><button type="button" class="navtab" data-target="rekap">Rekap Anggaran</button><button type="button" class="navtab" data-target="riwayat">Riwayat FA Detail</button><button type="button" class="navtab" data-target="jenisBelanja">Jenis Belanja</button><button type="button" class="navtab" data-target="simulasi">Analisis Pergeseran</button></nav><div class="topbar-right"><span class="live-dot"></span><span>Dashboard Anggaran</span></div><button id="logoutButton" class="secondary" type="button" style="display:none">Keluar</button></header>
+<main><div id="overview" class="intro"><div><h1>Rekapitulasi Alokasi Anggaran</h1><p class="sub">Ringkasan Alokasi dan Realisasi Anggaran berdasarkan Unit Kerja dan Klasifikasi Belanja</p></div><span class="chip" id="periodeBadge">Menunggu laporan</span></div>
+<section class="upload" id="upload"><div class="uploadText"><strong>Unggah Laporan FA Detail SAKTI</strong><small>Format PDF teks dari SAKTI, tanpa perlu mengunggah file mapping setiap kali. Maksimum 15 MB.</small></div><label class="upload-btn" for="pdfFile">Pilih PDF FA Detail</label><input type="file" id="pdfFile" accept="application/pdf,.pdf"></section><div class="status" id="status">PDF hanya disimpan ke Supabase apabila Anda memilih Simpan FA Detail.</div>
+<div class="historyPanel" id="riwayat"><div><strong>Riwayat FA Detail</strong><small>Pilih laporan tersimpan untuk menampilkan kembali rekapitulasi.</small></div><div class="historyControls"><select id="historySelect" aria-label="Pilih riwayat FA Detail"><option value="">Memuat riwayat…</option></select><button class="secondary" id="openHistory" type="button">Tampilkan Riwayat</button><button class="secondary" id="refreshHistory" type="button" title="Muat ulang riwayat">↻</button></div></div>
+<div id="fileInfo" class="filemeta" aria-live="polite"></div>
+<div id="results"><div class="metrics" id="metrics"></div><div class="insight-grid" id="insights"></div><div class="rekap-head" id="rekap"><div><span class="eyebrow">ANALISIS ANGGARAN</span><h2>Rincian Alokasi per Unit Kerja</h2><p>Telusuri Kegiatan dan KRO untuk melihat pagu, realisasi, dan sisa belanja.</p></div></div><div class="toolbar"><div class="filters"><div class="filter-control"><label for="unitSelect">Unit Kerja</label><select id="unitSelect" aria-label="Unit kerja"></select></div><div class="filter-control"><label for="kegiatanSelect">Kegiatan</label><select id="kegiatanSelect" aria-label="Kegiatan"></select></div><div class="filter-control"><label for="kroSelect">KRO</label><select id="kroSelect" aria-label="KRO"></select></div></div><button class="secondary" id="exportButton">Ekspor rekap CSV</button></div><div id="warnings"></div><div id="sections"></div><div id="grandTotals"></div><p class="note">Sumber: PDF Laporan Ketersediaan Dana Detail SAKTI. Klasifikasi unit kerja dari Mapping KRO–RO–Komponen terlampir. Nilai dalam rupiah. Sisa Anggaran dihitung sebagai Pagu Revisi dikurangi Realisasi. Lock Pagu tidak diperhitungkan.</p></div>
+<section id="jenisBelanja" class="nonop-page" aria-label="Belanja nonoperasional per jenis belanja">
+ <div class="nonop-heading"><div><span class="eyebrow">KLASIFIKASI BELANJA NONOPERASIONAL</span><h1>Belanja 521, 522 dan 524</h1><p>Rekap Pagu Revisi, Realisasi, dan Sisa Anggaran setiap unit kerja berdasarkan FA Detail aktif. Belanja operasional dan belanja modal tidak termasuk.</p></div><button id="nonopBack" class="secondary" type="button">Kembali ke Dashboard</button></div>
+ <div class="nonop-toolbar"><div class="nonop-control"><label for="nonopUnit">Unit Kerja</label><select id="nonopUnit"><option value="ALL">All — Seluruh Unit Kerja</option></select></div><div class="nonop-actions"><button class="secondary" id="nonopExport" type="button">Ekspor CSV</button></div></div>
+ <div id="nonopStatus" class="nonop-alert" aria-live="polite">Unggah atau buka FA Detail pada dashboard terlebih dahulu.</div>
+ <div class="nonop-cards" id="nonopCards"></div>
+ <div class="section"><div class="sectionhead"><h2>Rekap per Jenis Belanja</h2><span>Nilai dalam rupiah · Lock Pagu tidak diperhitungkan</span></div><div class="tablewrap" id="nonopTable"></div></div>
+ <p class="note">Klasifikasi menggunakan 3 digit awal akun: 521 (Belanja Barang), 522 (Belanja Jasa), 524 (Belanja Perjalanan Dinas). Hanya akun nonoperasional dengan mapping unit kerja yang dihitung. Sisa = Pagu Revisi − Realisasi. Kelompok 523 dan akun lainnya tidak termasuk rekap ini.</p>
+</section>
+<section id="simulasi" class="analysis-page" aria-label="Analisis Pergeseran Anggaran">
+ <div class="analysis-heading"><div><span class="eyebrow">SIMULASI ANGGARAN</span><h1>Analisis Pergeseran Anggaran</h1><p>Identifikasi sumber anggaran dalam kelompok 524 atau Non-524 yang sama, tanpa mengubah Kegiatan, KRO, jenis belanja atau status operasional.</p></div><button id="analysisBack" class="secondary" type="button">Kembali ke Dashboard</button></div>
+ <div class="analysis-note"><strong>Ruang lingkup simulasi:</strong> Unit kerja asal dan tujuan boleh berbeda selama Kegiatan dan KRO tetap sama. Akun 524xxx dapat bergeser ke sesama 524xxx; akun Non-524 hanya ke sesama Non-524 pada kelompok belanja nonoperasional yang sama. Pergeseran antara belanja operasional dan nonoperasional dilarang. Pergeseran dapat dilakukan antar-RO atau komponen dalam KRO yang sama. Nilai maksimal mengikuti sisa anggaran sumber pada laporan aktif.</div>
+ <div class="analysis-inline-upload" role="status" aria-live="polite"><span id="analysisUploadStatus" class="analysis-upload-status">Analisis otomatis menggunakan FA Detail yang aktif pada dashboard.</span></div>
+ <div class="analysis-card"><div class="analysis-card-title"><div><h2>1. Tentukan alokasi tujuan</h2><p id="analysisFileLabel">Unggah atau buka riwayat FA Detail terlebih dahulu.</p></div><button class="secondary" type="button" id="analysisReset">Reset Simulasi</button></div>
+  <div class="analysis-filters"><div class="analysis-unit-field"><span class="analysis-label">Unit Kerja Pengusul Revisi</span><details id="analysisProposerMenu" class="analysis-check-dropdown"><summary id="analysisProposerCaption">Pilih satu unit kerja</summary><div id="analysisProposerChoices" class="analysis-check-options" role="group" aria-label="Pilih satu unit kerja pengusul"></div></details><small>Maksimal satu unit kerja; tidak tersedia pilihan All.</small></div><label>Alokasi tujuan (Akun dan akumulasi sisa anggaran)<select id="analysisTarget"><option value="">Pilih alokasi tujuan</option></select></label></div>
+  <div id="analysisTargetSummary" class="analysis-placeholder">Belum ada alokasi tujuan yang dipilih.</div>
+ </div>
+ <div class="analysis-card"><div class="analysis-card-title"><div><h2>2. Kebutuhan dan batasan usulan</h2><p>Tulis informasi tambahan, termasuk RO yang dituju, kebutuhan kegiatan, atau kendala lain.</p></div></div>
+  <div class="analysis-filters"><div class="analysis-unit-field"><span class="analysis-label">Unit Kerja Sumber Anggaran</span><details id="analysisSourceUnitMenu" class="analysis-check-dropdown"><summary id="analysisSourceUnitCaption">All — Semua unit kerja</summary><div id="analysisSourceUnitChoices" class="analysis-check-options" role="group" aria-label="Pilih unit kerja asal sumber anggaran"></div></details><small>Pilih All atau tandai beberapa unit kerja sebagai sumber.</small></div><div class="analysis-wide-field"><label for="analysisAmount">Kebutuhan tambahan anggaran (Rp, opsional)</label><input id="analysisAmount" type="number" min="1" step="1" inputmode="numeric" placeholder="Contoh: 50000000"><small class="analysis-explain">Kosongkan jika belum ada nilai kebutuhan yang pasti.</small></div></div>
+  <div class="analysis-wide-field"><label for="analysisNotes">Catatan atau kebutuhan tambahan (diisi manual)</label><textarea id="analysisNotes" rows="4" maxlength="3000" placeholder="Contoh: membutuhkan tambahan untuk rapat koordinasi; prioritaskan sumber dengan realisasi rendah; jangan gunakan anggaran yang sudah terikat kontrak."></textarea></div>
+  <div class="analysis-actions"><button id="analysisEvaluate" type="button">Cari Rekomendasi Sumber Dana</button><button id="analysisExport" type="button" class="secondary" disabled>Ekspor Rekomendasi CSV</button></div>
+ </div>
+ <div class="analysis-card"><div class="analysis-card-title"><div><h2>3. Rekomendasi analisis anggaran</h2><p>Pilih beberapa sumber secara manual, atau gunakan Pilih Otomatis untuk menyusun pembiayaan kebutuhan.</p></div><span id="analysisCount" class="soft-pill">0 rekomendasi</span></div><div id="analysisSourceSummary" class="analysis-placeholder">Pilih alokasi tujuan, kemudian jalankan analisis.</div><div id="analysisResults" class="analysis-placeholder">Rekomendasi yang memenuhi persyaratan akan ditampilkan di sini.</div><div id="analysisSelection" aria-live="polite"></div></div>
+ <p class="analysis-footnote">Hasil simulasi bukan persetujuan revisi anggaran. Validasi atas blokir/lock, kewajiban yang telah timbul, RPD, kewenangan revisi, dan ketentuan SAKTI tetap harus dilakukan secara terpisah. Alokasi yang belum tercantum dalam FA Detail tidak dapat dijadikan tujuan pada versi ini.</p>
+</section>
+</main>
+<div id="decisionModal" class="modalBackdrop" role="dialog" aria-modal="true" aria-labelledby="decisionTitle">
+ <div class="modal"><h2 id="decisionTitle">FA Detail berhasil dibaca</h2><p id="decisionSummary"></p>
+ <p>Apakah laporan ini ingin disimpan ke riwayat? Menyimpan berarti PDF asli dan hasil rekap disimpan pada penyimpanan privat Supabase.</p>
+ <div class="actions"><button class="secondary cancel" id="cancelUpload" type="button">Batal</button><button class="secondary" id="continueUpload" type="button">Lanjutkan tanpa menyimpan</button><button id="saveUpload" type="button">Simpan FA Detail</button></div></div>
+</div>
+<script>
+'use strict';
+const $=s=>document.querySelector(s), nf=n=>new Intl.NumberFormat('id-ID',{maximumFractionDigits:0}).format(n||0), safe=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let report=null, pending=null, historyItems=[];
+let analysisActivePdf=null, analysisActiveHistoryId='', analysisRecovering=null;
+const dateDisplay=new Intl.DateTimeFormat('id-ID',{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'Asia/Jakarta'});
+function dateId(iso){if(!iso)return 'Tidak tersedia';const d=new Date(iso);if(isNaN(d.getTime()))return 'Tidak tersedia';const parts=Object.fromEntries(dateDisplay.formatToParts(d).map(x=>[x.type,x.value]));return `${parts.day} ${parts.month} ${parts.year}, ${parts.hour}.${parts.minute}`;}
+function showFileInfo(meta,source){$('#fileInfo').innerHTML=meta?`<strong>${source==='history'?'Riwayat tersimpan':'FA Detail aktif'}:</strong> Tanggal file: <strong>${safe(dateId(meta.fileModifiedAt||meta.savedAt))}</strong>${meta.savedAt?' · Disimpan: <strong>'+safe(dateId(meta.savedAt))+'</strong>':''}${source==='temporary'?' · <strong>Belum disimpan ke riwayat</strong>':''}`:'';}
+function modal(open){$('#decisionModal').classList.toggle('open',!!open);}
+function runServer(method,payload){return window.sbAdapter.run(method,payload);}
+function readFileBase64(file){return new Promise((resolve,reject)=>{const fr=new FileReader();fr.onload=()=>resolve(String(fr.result).split(',')[1]);fr.onerror=()=>reject(Error('Gagal membaca PDF untuk penyimpanan.'));fr.readAsDataURL(file);});}
+async function reloadHistory(){const sel=$('#historySelect');sel.innerHTML='<option value="">Memuat riwayat…</option>';try{historyItems=await runServer('listFaHistory');sel.innerHTML='<option value="">Pilih tanggal laporan…</option>'+historyItems.map(x=>`<option value="${safe(x.fileId)}">${safe(dateId(x.fileModifiedAt||x.savedAt))}</option>`).join('');if(!historyItems.length)sel.innerHTML='<option value="">Belum ada riwayat tersimpan</option>';}catch(e){sel.innerHTML='<option value="">Riwayat tidak dapat dimuat</option>';info('Riwayat gagal dimuat: '+(e.message||e),true);}}
+
+function info(message,error=false){const el=$('#status');el.textContent=message;el.className='status'+(error?' error':'');}
+function val(v){return /^-?[\d,]+$/.test(String(v||'').replace(/\s/g,''))? Number(String(v).replace(/,/g,'')):NaN;}
+function findCol(tokens, from,to){const candidates=tokens.filter(t=>(t.x+t.w)>=from&&(t.x+t.w)<to && /^-?[\d,]+$/.test(t.t.replace(/\s/g,'')));return candidates.length?val(candidates[0].t):NaN;}
+function joinedLeft(tokens){return tokens.filter(t=>t.x<182).map(t=>t.t).join(' ').replace(/\s+/g,' ').trim();}
+function parsePageRows(items,viewport,pageNumber,state){
+ const placed=[];
+ for(const it of items){if(!it.str||!it.str.trim())continue;
+   const a=pdfjsLib.Util.transform(viewport.transform,it.transform);
+   placed.push({x:a[4],y:a[5],w:it.width||0,t:it.str.trim()});
+ }
+ placed.sort((a,b)=>a.y-b.y||a.x-b.x);
+ const bands=[];
+ for(const it of placed){
+   let b=bands.length?bands[bands.length-1]:null;
+   if(!b||Math.abs(b.y-it.y)>5.2){b={y:it.y,arr:[]};bands.push(b);}
+   b.arr.push(it);
+ }
+ const rows=[];
+ for(const band of bands){
+   const tokens=band.arr.sort((a,b)=>a.x-b.x),left=joinedLeft(tokens);
+   let m;
+   if((m=left.match(/\b(?:CL|WA)\.(\d{4})\b/i))){state.kegiatan=m[1];state.kro='';state.ro='';state.komponen='';}
+   else if((m=left.match(/\b([A-Z]{3})\.(\d{3})\b/))){state.kro=m[1];state.ro=m[2];state.komponen='';}
+   else if((m=left.match(/\b([A-Z]{3})\b/)) && !state.kro && state.kegiatan){state.kro=m[1];}
+   // Komponen = 3 digit tersendiri, berbeda dari 3 digit + '.' subkomponen.
+   else if((m=left.match(/^\s*(\d{3})\s+/)) && state.kegiatan && state.kro && state.ro){state.komponen=m[1];state.subkomponen='';}
+   else if((m=left.match(/\b(\d{3})\.([0-9A-Z]{2})\b/))){state.komponen=m[1];state.subkomponen=m[2];}
+   const accountMatch=left.match(/\b(5\d{5})\b/);
+   if(!accountMatch)continue;
+   if(!state.kegiatan || !state.kro || !state.ro || !state.komponen){state.skip=(state.skip||0)+1;continue;}
+   const pagu=findCol(tokens,400,440), realisasi=findCol(tokens,700,740),sisa=findCol(tokens,810,842);
+   if(![pagu,realisasi,sisa].every(Number.isFinite)){state.skip=(state.skip||0)+1;continue;}
+   rows.push({kode:accountMatch[1],akun:accountMatch[1],fullCode:`${state.kegiatan}.${state.kro}.${state.ro}.${state.komponen}`,subkomponen:state.subkomponen||'',pagu,realisasi,sisa,page:pageNumber,rowPosition:Math.round(band.y*10)});
+ }
+ return rows;
+}
+async function pdfToRows(file){
+ if(!window.pdfjsLib)throw Error('Pustaka PDF.js belum termuat. Periksa jaringan atau pembatasan CDN.');
+ if(file.size>15*1024*1024)throw Error('PDF melebihi 15 MB.');
+ pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+ const doc=await pdfjsLib.getDocument({data:new Uint8Array(await file.arrayBuffer()),useSystemFonts:true}).promise;
+ const rows=[],state={kegiatan:'',kro:'',ro:'',komponen:'',subkomponen:'',skip:0};let periode='';
+ for(let i=1;i<=doc.numPages;i++){
+   const page=await doc.getPage(i),viewport=page.getViewport({scale:1}),tc=await page.getTextContent({disableCombineTextItems:false});
+   if(i===1){const txt=tc.items.map(x=>x.str).join(' ');let m=txt.match(/Periode\s+(Januari|Februari|Maret|April|Mei|Juni|Juli|Agustus|September|Oktober|November|Desember)\s+(20\d{2})/i);periode=m?m[1]+' '+m[2]:'Periode dari PDF';}
+   rows.push(...parsePageRows(tc.items,viewport,i,state));
+   if(i===1 && !rows.length)throw Error('Tidak dapat mengenali tabel FA Detail. Pastikan PDF adalah teks asli dari SAKTI (bukan hasil scan).');
+   if(i%5===0 || i===doc.numPages)info(`Membaca halaman ${i}/${doc.numPages} · ${nf(rows.length)} baris akun terbaca…`);
+   page.cleanup();
+ }
+ if(!rows.length)throw Error('Tidak ditemukan akun belanja. Periksa format PDF.');
+ return {rows,periode,skipped:state.skip};
+}
+function subtotal(unit,kro,key){return (report.data[unit]?.[kro]?.[key])||{pagu:0,realisasi:0,sisa:0,count:0};}
+function totalGroup(unit,keys){const z={pagu:0,realisasi:0,sisa:0,count:0};for(const kro in report.data[unit]||{})for(const k of keys){let x=subtotal(unit,kro,k);for(const f in z)z[f]+=x[f]||0;}return z;}
+function metric(name,value,hint){return `<div class="metric"><div class="label">${name}</div><div class="value">${nf(value)}</div><small>${hint}</small></div>`;}
+function renderMetrics(){const d=report.diagnostics;const p=d.pagu?100*d.realisasi/d.pagu:0;
+ $('#metrics').innerHTML=metric('Total Pagu Terbaca',d.pagu,'Rupiah')+metric('Total Realisasi',d.realisasi,'Rupiah')+metric('Sisa Anggaran',d.sisa,'Rupiah')+`<div class="metric"><div class="label">Persentase Realisasi Total</div><div class="value percent">${p.toLocaleString('id-ID',{minimumFractionDigits:2,maximumFractionDigits:2})}%</div></div>`;
+}
+function renderWarnings(){let w=[];if(report.notMapped.length)w.push(`<div class="alert"><strong>${report.notMapped.length} kode komponen belum ada dalam mapping.</strong> Tidak dialokasikan secara spekulatif ke unit lain. Rincian: ${report.notMapped.slice(0,20).map(x=>safe(x.kode)+' ('+nf(x.pagu)+')').join(', ')}${report.notMapped.length>20?'…':''}.</div>`);
+ if(report.skipped)w.push(`<div class="alert">${nf(report.skipped)} baris terlewati saat ekstraksi karena konteks atau kolom numerik tidak dapat dibaca. Periksa total sebelum menggunakan hasil.</div>`);
+
+ $('#warnings').innerHTML=w.join('');}
+function makeSpecialTable(unit,keys,title){const kros=Object.keys(report.data[unit]||{}).filter(kro=>keys.some(k=>subtotal(unit,kro,k).count));if(!kros.length)return '';
+ let out=`<div class="special"><h3>${title}</h3><div class="tablewrap"><table><thead><tr><th>Kegiatan.KRO</th><th>Pagu (Rp)</th><th>Realisasi (Rp)</th><th>Sisa (Rp)</th></tr></thead><tbody>`;
+ for(const kro of kros.sort()){const sum={pagu:0,realisasi:0,sisa:0};for(const k of keys)for(const p of Object.keys(sum))sum[p]+=subtotal(unit,kro,k)[p];out+=`<tr><td><strong>${safe(kro)}</strong></td><td>${nf(sum.pagu)}</td><td>${nf(sum.realisasi)}</td><td>${nf(sum.sisa)}</td></tr>`;}
+ const t=totalGroup(unit,keys);return out+`</tbody><tfoot><tr><td>Total</td><td>${nf(t.pagu)}</td><td>${nf(t.realisasi)}</td><td>${nf(t.sisa)}</td></tr></tfoot></table></div></div>`;}
+// Filter berjenjang: Unit Kerja | Kegiatan | KRO. Kode tetap menyertakan Kegiatan agar tidak rancu.
+function selectedUnits(){const v=$('#unitSelect').value;return v==='ALL'?report.unitOrder:[v];}
+function roEntries(unit){return Object.entries((report.byRO||{})[unit]||{});}
+function eligibleCodes(){return selectedUnits().flatMap(unit=>roEntries(unit).map(([code])=>code));}
+function refreshKegiatan(){
+ const sel=$('#kegiatanSelect'),old=sel.value;
+ const codes=[...new Set(eligibleCodes().map(k=>k.split('.')[0]))].sort();
+ sel.innerHTML='<option value="ALL">Semua Kegiatan (All)</option>'+codes.map(c=>`<option value="${safe(c)}">${safe(c)}</option>`).join('');
+ sel.value=codes.includes(old)?old:'ALL';refreshKro();
+}
+function refreshKro(){
+ const sel=$('#kroSelect'),old=sel.value,kegiatan=$('#kegiatanSelect').value;
+ const codes=[...new Set(eligibleCodes().filter(code=>kegiatan==='ALL'||code.split('.')[0]===kegiatan).map(code=>code.split('.')[1]))].sort();
+ sel.innerHTML='<option value="ALL">Semua KRO (All)</option>'+codes.map(c=>`<option value="${safe(c)}">${safe(c)}</option>`).join('');
+ sel.value=codes.includes(old)?old:'ALL';
+}
+function chosenData(unit){
+ const k=$('#kegiatanSelect').value, kro=$('#kroSelect').value, output={};
+ for(const [code,cats] of roEntries(unit)){
+   const parts=code.split('.');
+   if(k!=='ALL'&&parts[0]!==k)continue;
+   if(kro!=='ALL'&&parts[1]!==kro)continue;
+   const group=parts.slice(0,2).join('.');
+   if(!output[group])output[group]={};
+   for(const [cat,v] of Object.entries(cats)){
+     if(!output[group][cat])output[group][cat]={pagu:0,realisasi:0,sisa:0,count:0};
+     for(const field of ['pagu','realisasi','sisa','count'])output[group][cat][field]+=v[field]||0;
+   }
+ }
+ return output;
+}
+function sumCat(data,k,cat){return data[k]?.[cat]||{pagu:0,realisasi:0,sisa:0,count:0};}
+function sumCats(data,keys){const z={pagu:0,realisasi:0,sisa:0,count:0};for(const k of Object.keys(data))for(const cat of keys){const a=sumCat(data,k,cat);for(const f of Object.keys(z))z[f]+=a[f]||0;}return z;}
+function specialViewTable(data,keys,title,label){const list=Object.keys(data).filter(k=>keys.some(c=>sumCat(data,k,c).count)).sort();if(!list.length)return '';
+ let h=`<div class="special"><h3>${title}</h3><div class="tablewrap"><table><thead><tr><th>${label}</th><th>Pagu (Rp)</th><th>Realisasi (Rp)</th><th>Sisa (Rp)</th></tr></thead><tbody>`;
+ for(const k of list){const s=sumCats({[k]:data[k]},keys);h+=`<tr><td>${safe(k)}</td><td>${nf(s.pagu)}</td><td>${nf(s.realisasi)}</td><td>${nf(s.sisa)}</td></tr>`;}
+ const t=sumCats(data,keys);return h+`</tbody><tfoot><tr><td>TOTAL</td><td>${nf(t.pagu)}</td><td>${nf(t.realisasi)}</td><td>${nf(t.sisa)}</td></tr></tfoot></table></div></div>`;
+}
+function renderUnit(unit){
+ const data=chosenData(unit),label='Kegiatan.KRO';
+ const kros=Object.keys(data).filter(k=>(sumCat(data,k,'PERJADIN').count+sumCat(data,k,'NON524').count)>0).sort();
+ const travel=sumCats(data,['PERJADIN']),non=sumCats(data,['NON524']);
+ const allKeys=Object.keys(data);
+ if(!allKeys.length)return '';
+ let h=`<section class="section"><div class="sectionhead"><h2>${safe(unit)}</h2><span>${nf(allKeys.length)} Kegiatan.KRO • Rupiah</span></div>`;
+ if(kros.length){h+=`<div class="tablewrap"><table class="finance"><thead><tr><th rowspan="2">${label}</th><th colspan="3" class="group">Belanja Perjalanan Dinas / Belanja 524</th><th colspan="3" class="group non">Belanja Non Perjalanan Dinas / Belanja Non-524<small>(Bukan Belanja Modal/Barang Operasional)</small></th></tr><tr><th class="cat">Pagu</th><th class="cat">Realisasi</th><th class="cat">Sisa</th><th class="cat">Pagu</th><th class="cat">Realisasi</th><th class="cat">Sisa</th></tr></thead><tbody>`;
+ for(const k of kros){const a=sumCat(data,k,'PERJADIN'),b=sumCat(data,k,'NON524');h+=`<tr><td><strong>${safe(k)}</strong></td><td>${nf(a.pagu)}</td><td>${nf(a.realisasi)}</td><td>${nf(a.sisa)}</td><td>${nf(b.pagu)}</td><td>${nf(b.realisasi)}</td><td>${nf(b.sisa)}</td></tr>`;}
+ h+=`</tbody><tfoot><tr><td>JUMLAH</td><td>${nf(travel.pagu)}</td><td>${nf(travel.realisasi)}</td><td>${nf(travel.sisa)}</td><td>${nf(non.pagu)}</td><td>${nf(non.realisasi)}</td><td>${nf(non.sisa)}</td></tr></tfoot></table></div>`;
+ }
+ if(unit==='Biro Umum dan Keuangan'){
+ h+=specialViewTable(data,['OPERASIONAL_GAJI'],'Belanja Operasional — Gaji (EBA.994.001)',label);
+ h+=specialViewTable(data,['OPERASIONAL_BARANG'],'Belanja Operasional — Barang (EBA.994.002)',label);
+ h+=specialViewTable(data,['NON_OPERASIONAL_MODAL'],'Belanja Nonoperasional — Modal (akun 53xxxx)',label);
+ }
+ for(const [key,title] of [['MODAL_LAIN','Belanja Modal di luar kategori khusus'],['GAJI_LAIN','Belanja Pegawai di luar kategori khusus'],['LAINNYA','Akun lainnya di luar kategori pokok']])h+=specialViewTable(data,[key],title,label);
+ return h+'</section>';
+}
+// Rekap konsolidasi lintas unit hanya memakai data yang sedang lolos filter.
+// Setiap baris akun dihitung sekali: unit -> Kegiatan.KRO -> jenis belanja.
+function renderGrandTotals(){
+ const grouped={};
+ for(const unit of selectedUnits()){
+  const data=chosenData(unit);
+  for(const code of Object.keys(data)){
+   if(!grouped[code])grouped[code]={PERJADIN:{pagu:0,realisasi:0,sisa:0,count:0},NON524:{pagu:0,realisasi:0,sisa:0,count:0}};
+   for(const cat of ['PERJADIN','NON524']){
+    const from=sumCat(data,code,cat),to=grouped[code][cat];
+    for(const field of ['pagu','realisasi','sisa','count'])to[field]+=from[field]||0;
+   }
+  }
+ }
+ const codes=Object.keys(grouped).filter(c=>grouped[c].PERJADIN.count||grouped[c].NON524.count).sort();
+ if(!codes.length){$('#grandTotals').innerHTML='';return;}
+ const grand={PERJADIN:{pagu:0,realisasi:0,sisa:0},NON524:{pagu:0,realisasi:0,sisa:0}};
+ let html=`<section class="section grand-total"><div class="sectionhead"><h2>Jumlah Total per Kegiatan.KRO</h2><span>Gabungan ${nf(selectedUnits().length)} unit kerja sesuai filter • Rupiah</span></div><div class="tablewrap"><table class="finance"><thead><tr><th rowspan="2">Kegiatan.KRO</th><th colspan="3" class="group">Belanja Perjalanan Dinas / Belanja 524</th><th colspan="3" class="group non">Belanja Non Perjalanan Dinas / Belanja Non-524<small>(Bukan Belanja Modal/Barang Operasional)</small></th></tr><tr><th class="cat">Pagu</th><th class="cat">Realisasi</th><th class="cat">Sisa</th><th class="cat">Pagu</th><th class="cat">Realisasi</th><th class="cat">Sisa</th></tr></thead><tbody>`;
+ for(const code of codes){
+  const a=grouped[code].PERJADIN,b=grouped[code].NON524;
+  for(const [cat,source] of [['PERJADIN',a],['NON524',b]])for(const key of ['pagu','realisasi','sisa'])grand[cat][key]+=source[key];
+  html+=`<tr><td><strong>${safe(code)}</strong></td><td>${nf(a.pagu)}</td><td>${nf(a.realisasi)}</td><td>${nf(a.sisa)}</td><td>${nf(b.pagu)}</td><td>${nf(b.realisasi)}</td><td>${nf(b.sisa)}</td></tr>`;
+ }
+ const a=grand.PERJADIN,b=grand.NON524;
+ html+=`</tbody><tfoot><tr><td>JUMLAH TOTAL</td><td>${nf(a.pagu)}</td><td>${nf(a.realisasi)}</td><td>${nf(a.sisa)}</td><td>${nf(b.pagu)}</td><td>${nf(b.realisasi)}</td><td>${nf(b.sisa)}</td></tr></tfoot></table></div></section>`;
+ $('#grandTotals').innerHTML=html;
+}
+
+// Grafik dashboard: dihitung dari akun yang lolos filter, tanpa menjumlahkan subtotal KRO berulang.
+function renderInsights(){
+ if(!report){$('#insights').innerHTML='';return;}
+ const categories=[
+  {key:'PERJADIN',name:'Belanja 524',color:'#225bba'},
+  {key:'NON524',name:'Belanja Non-524',color:'#2cc6c3'},
+  {key:'OPERASIONAL_GAJI',name:'Operasional Gaji',color:'#8b76d7'},
+  {key:'OPERASIONAL_BARANG',name:'Operasional Barang',color:'#edaa46'},
+  {key:'NON_OPERASIONAL_MODAL',name:'Nonoperasional Modal',color:'#e27e94'},
+  {key:'OTHER',name:'Kelompok lainnya',color:'#b4c4d8'}
+ ];
+ const pct=(value,total)=>total?(100*value/total).toLocaleString('id-ID',{minimumFractionDigits:1,maximumFractionDigits:1})+'%':'0,0%';
+ const escAttr=v=>safe(String(v));
+ const collectUnit=(data,unitName)=>{
+  const amounts={};
+  let total=0;
+  for(const code of Object.keys(data))for(const cat of Object.keys(data[code]))total+=Number(data[code][cat].pagu)||0;
+  for(const cat of categories.slice(0,5))amounts[cat.key]=sumCats(data,[cat.key]).pagu;
+  const known=categories.slice(0,5).reduce((sum,c)=>sum+amounts[c.key],0);
+  amounts.OTHER=Math.max(0,total-known);
+  return total?{unit:unitName,total,amounts}:null;
+ };
+
+ // Donut mengikuti filter aktif.
+ const totalByCat=Object.fromEntries(categories.map(c=>[c.key,0]));
+ const filteredUnits=[];
+ for(const unit of selectedUnits()){
+  const item=collectUnit(chosenData(unit),unit);
+  if(!item)continue;
+  categories.forEach(cat=>totalByCat[cat.key]+=item.amounts[cat.key]||0);
+  filteredUnits.push(item);
+ }
+ const grandTotal=filteredUnits.reduce((sum,u)=>sum+u.total,0);
+ let degrees=0;
+ const stops=[];
+ for(const cat of categories){
+  const val=totalByCat[cat.key];
+  if(val<=0)continue;
+  const end=degrees+100*val/grandTotal;
+  stops.push(`${cat.color} ${degrees.toFixed(5)}% ${end.toFixed(5)}%`);
+  degrees=end;
+ }
+ const donutStyle=stops.length?`background:conic-gradient(${stops.join(',')})`:'background:#edf3fa';
+ const donut=`<div class="donut" style="${donutStyle}"><div class="donut-inner"><span>${pct(totalByCat.PERJADIN,grandTotal)}</span><small>Belanja 524</small></div></div>`;
+ const legend=categories.filter(c=>totalByCat[c.key]>0).map(c=>`<div class="composition-row"><span class="composition-name"><i class="legdot" style="background:${c.color}"></i>${c.name}</span><strong>${nf(totalByCat[c.key])}</strong><span class="composition-percent">${pct(totalByCat[c.key],grandTotal)}</span></div>`).join('');
+
+ // Grafik batang SELALU menampilkan semua unit kerja dan tidak dipengaruhi filter.
+ const allUnits=report.unitOrder.map(unit=>collectUnit(report.byRO?.[unit]||{},unit)).filter(Boolean);
+ const chartRows=allUnits.slice().sort((a,b)=>b.total-a.total);
+ const max=Math.max(1,...chartRows.map(u=>u.total));
+ const bars=chartRows.map(u=>{
+  const width=u.total/max*100;
+  const segments=categories.filter(c=>u.amounts[c.key]>0).map(c=>{
+   const percentage=100*u.amounts[c.key]/u.total;
+   const effectiveWidth=width*percentage/100;
+   const label=(percentage>=9 && effectiveWidth>=8)?`<span class="segment-percent">${pct(u.amounts[c.key],u.total)}</span>`:'';
+   const darkText=['NON524','OPERASIONAL_BARANG','OTHER'].includes(c.key);
+   return `<div class="bar-segment ${darkText?'segment-ink':'segment-light'}" style="width:${percentage.toFixed(5)}%;background:${c.color}" title="${escAttr(c.name)}: Rp ${nf(u.amounts[c.key])} (${pct(u.amounts[c.key],u.total)})" aria-label="${escAttr(c.name)} ${pct(u.amounts[c.key],u.total)}">${label}</div>`;
+  }).join('');
+  return `<div class="unit-comparison is-all"><div class="unit-comparison-top"><strong class="unit-name" title="${escAttr(u.unit)}">${safe(u.unit)}</strong><div class="bar-scale"><div class="bar-track" style="width:${width.toFixed(5)}%">${segments}</div></div><strong class="unit-total">Rp ${nf(u.total)}</strong></div></div>`;
+ }).join('');
+
+ $('#insights').innerHTML=`<div class="insight-card"><div class="insight-title"><div><span class="eyebrow">KOMPOSISI BELANJA</span><h3>Distribusi Pagu</h3></div><span class="soft-pill">Sesuai filter</span></div><div class="donut-layout">${donut}<div class="composition-list">${legend||'<div class="empty">Belum ada data.</div>'}</div></div></div><div class="insight-card"><div class="insight-title"><div><span class="eyebrow">PERBANDINGAN UNIT</span><h3>Perbandingan Pagu per Unit Kerja</h3></div><span class="soft-pill">Pagu (Rp)</span></div><div class="unit-bars">${bars||'<div class="empty">Belum ada alokasi unit kerja.</div>'}</div></div>`;
+}
+
+function renderAllUnits(){
+ renderInsights();
+ const markup=selectedUnits().map(renderUnit).filter(Boolean);
+ $('#sections').innerHTML=markup.length?markup.join(''):'<div class="empty">Tidak ada data untuk filter yang dipilih.</div>';
+ renderGrandTotals();
+}
+// Kebijakan laporan: Lock Pagu tidak diperhitungkan.
+// Sisa dihitung dari Pagu Revisi dikurangi Realisasi untuk SEMUA kelompok.
+// Idempoten: laporan riwayat lama dapat dibuka tanpa mengubah file arsip.
+function tanpaLockPagu(data){
+ if(!data)return data;
+ const fix = x => {
+  if(!x || typeof x!=='object')return;
+  if(Number.isFinite(Number(x.pagu)) && Number.isFinite(Number(x.realisasi)))
+   x.sisa=Number(x.pagu)-Number(x.realisasi);
+ };
+ for(const unit of Object.values(data.data||{}))
+  for(const kro of Object.values(unit||{}))
+   for(const cat of Object.values(kro||{}))fix(cat);
+ for(const unit of Object.values(data.byRO||{}))
+  for(const ro of Object.values(unit||{}))
+   for(const cat of Object.values(ro||{}))fix(cat);
+ for(const item of (Array.isArray(data.detailAccounts)?data.detailAccounts:[]))fix(item);
+ fix(data.diagnostics);
+ return data;
+}
+function showReport(){
+ report=tanpaLockPagu(report);
+ analysisCurrentReport=null;analysisLast=null;
+ const sel=$('#unitSelect');
+ sel.innerHTML='<option value="ALL">Semua Unit Kerja (All)</option>'+report.unitOrder.map(n=>`<option value="${safe(n)}">${safe(n)}</option>`).join('');
+ sel.value='ALL';
+ sel.onchange=()=>{refreshKegiatan();renderAllUnits();};
+ $('#kegiatanSelect').onchange=()=>{refreshKro();renderAllUnits();};
+ $('#kroSelect').onchange=renderAllUnits;
+ refreshKegiatan();$('#periodeBadge').textContent=report.periode||'FA Detail';
+ $('#results').style.display='block';renderMetrics();renderWarnings();renderAllUnits();
+ if(document.body.classList.contains('analysis-mode')){refreshAnalysis();ensureAnalysisDetails();}
+ if(document.body.classList.contains('nonop-mode')){refreshNonop();if(!analysisItems().length)ensureAnalysisDetails().then(refreshNonop);}
+}
+function csvExport(){
+ if(!report)return;
+ const lines=[['Unit Kerja','Kegiatan.KRO','Kategori','Pagu','Realisasi','Sisa','Jumlah Baris Akun']];
+ for(const unit of selectedUnits())for(const [kro,cats] of Object.entries(chosenData(unit)))for(const [key,v] of Object.entries(cats))lines.push([unit,kro,key,v.pagu,v.realisasi,v.sisa,v.count]);
+ const esc=x=>'"'+String(x).replace(/"/g,'""')+'"';
+ const csv='\ufeff'+lines.map(r=>r.map(esc).join(';')).join('\r\n');
+ const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+ const a=document.createElement('a');a.href=url;a.download='Rekap_FA_Detail_Kemenko_Infra.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+// Simulasi pergeseran akun: hanya pembacaan data dan ekspor. Tidak pernah mengubah snapshot laporan.
+let analysisLast=null;
+let analysisCurrentReport=null;
+let analysisProposer='';
+let analysisSourceUnitAll=true;
+let analysisSourceUnits=new Set();
+function analysisUnitOptions(){
+ // Nama unit bukan berasal dari detailAccounts saja: riwayat lama tidak selalu menyimpannya.
+ if(!report)return [];
+ const names=[
+  ...(Array.isArray(report.unitOrder)?report.unitOrder:[]),
+  ...Object.keys(report.data||{}),
+  ...Object.keys(report.byRO||{}),
+  ...analysisItems().map(x=>x.unit)
+ ];
+ return [...new Set(names.filter(x=>typeof x==='string' && x.trim() && x!=='BELUM TERPETAKAN'))]
+  .sort((a,b)=>a.localeCompare(b,'id'));
+}
+function renderAnalysisUnitFilters(){
+ const units=analysisUnitOptions();
+ $('#analysisProposerChoices').innerHTML=units.map(unit=>`<label><input type="checkbox" name="analysisProposer" value="${safe(unit)}" ${analysisProposer===unit?'checked':''}><span>${safe(unit)}</span></label>`).join('');
+ $('#analysisProposerCaption').textContent=analysisProposer||'Pilih satu unit kerja';
+ $('#analysisSourceUnitChoices').innerHTML=`<label class="choice-all"><input type="checkbox" value="ALL" ${analysisSourceUnitAll?'checked':''}><span>All — Semua unit kerja</span></label>`+units.map(unit=>`<label><input type="checkbox" value="${safe(unit)}" ${!analysisSourceUnitAll&&analysisSourceUnits.has(unit)?'checked':''}><span>${safe(unit)}</span></label>`).join('');
+ const selected=[...analysisSourceUnits];
+ $('#analysisSourceUnitCaption').textContent=analysisSourceUnitAll?'All — Semua unit kerja':selected.length?selected.length===1?selected[0]:`${selected.length} unit kerja dipilih`:'Pilih unit kerja sumber';
+}
+let analysisTargetGroups=[];
+let analysisRecommendations=[];
+let analysisPicked=new Set();
+let analysisAllocation=[];
+function buildAnalysisTargetGroups(){
+ const groups=new Map();
+ analysisItems().filter(x=>x.unit===analysisProposer).forEach(x=>{
+  const key=[x.unit,x.kegiatan,x.kro,x.akun,x.jenis,x.domain].join('|');
+  if(!groups.has(key))groups.set(key,{key,unit:x.unit,kegiatan:x.kegiatan,kro:x.kro,akun:x.akun,jenis:x.jenis,domain:x.domain,pagu:0,realisasi:0,sisa:0,items:[]});
+  const g=groups.get(key);g.pagu+=x.pagu;g.realisasi+=x.realisasi;g.sisa+=x.sisa;g.items.push(x);
+ });
+ return [...groups.values()].sort((a,b)=>a.kro.localeCompare(b.kro)||a.akun.localeCompare(b.akun));
+}
+function refreshAnalysisTargets(){
+ analysisTargetGroups=buildAnalysisTargetGroups();
+ $('#analysisTarget').innerHTML='<option value="">Pilih akun tujuan</option>'+analysisTargetGroups.map((g,i)=>`<option value="${i}">Akun ${safe(g.akun)} · Sisa akumulasi Rp ${nf(g.sisa)} · ${safe(g.kro)}</option>`).join('');
+ $('#analysisTarget').disabled=!analysisTargetGroups.length;
+ analysisReset();
+ if(analysisProposer && !analysisTargetGroups.length){
+  const msg=analysisItems().length?'Unit ini belum memiliki akun yang dapat dianalisis.':'Rincian akun belum tersedia pada laporan aktif. Analisis akan menggunakan PDF yang dibuka di dashboard apabila tersedia.';
+  $('#analysisTargetSummary').textContent=msg;analysisEmpty(msg);
+ }
+}
+// Pemulihan detail akun otomatis dari PDF aktif atau PDF riwayat lama.
+// Tidak pernah membuat akun rekaan berdasarkan subtotal KRO.
+async function ensureAnalysisDetails(){
+ if(!report || analysisItems().length)return;
+ if(analysisRecovering)return analysisRecovering;
+ const original=report;
+ const status=$('#analysisUploadStatus');
+ const file=analysisActivePdf;
+ const historyId=analysisActiveHistoryId;
+ if(!file && !historyId){
+  status.textContent='Rincian akun belum tersedia pada laporan aktif. Buka riwayat yang memiliki PDF asli atau unggah laporan baru sekali di dashboard.';
+  return;
+ }
+ analysisRecovering=(async()=>{
+  try{
+   status.textContent='Membentuk rincian akun dari PDF FA Detail…';
+   let source=file;
+   if(!source){
+    const stored=await runServer('getFaHistoryPdf',historyId);
+    const bin=atob(stored.pdfBase64),bytes=new Uint8Array(bin.length);
+    for(let i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);
+    source=new File([bytes],stored.filename||'FA Detail.pdf',{type:'application/pdf'});
+   }
+   const parsed=await pdfToRows(source);
+   const updated=await runServer('prosesFaDetail',{...parsed,filename:source.name});
+   if(!Array.isArray(updated.detailAccounts)||!updated.detailAccounts.length){
+    throw Error('Server belum menghasilkan rincian akun. Pastikan Code.gs versi 19 terpasang dan deployment sudah diperbarui.');
+   }
+   if(report!==original)return;
+   // Riwayat disimpan apa adanya; hanya data dalam sesi aktif yang direkonstruksi.
+   report=tanpaLockPagu({...original,...updated,skipped:parsed.skipped,
+     fileModifiedAt:original.fileModifiedAt,savedAt:original.savedAt});
+   analysisCurrentReport=null;
+   refreshAnalysis();
+   if(document.body.classList.contains('nonop-mode'))refreshNonop();
+   status.textContent=`Siap: ${nf(updated.detailAccounts.length)} alokasi akun tersedia untuk analisis.`;
+  }catch(e){
+   status.textContent='Rincian akun gagal dimuat: '+(e.message||String(e));
+   $('#analysisTargetSummary').textContent=status.textContent;
+  }
+ })();
+ try{await analysisRecovering;}finally{analysisRecovering=null;}
+}
+
+function analysisItems(){return Array.isArray(report?.detailAccounts)?report.detailAccounts.filter(x=>x && x.pagu>=0):[];}
+function analysisOptionLabel(x){return `${x.unit} | ${x.fullCode}${x.subkomponen?'.'+x.subkomponen:''} · ${x.akun} · Sisa Rp ${nf(x.sisa)}`;}
+function analysisTitle(x){return x?`${x.unit} | ${x.fullCode}${x.subkomponen?'.'+x.subkomponen:''} | Akun ${x.akun}`:'—';}
+function analysisEmpty(message){$('#analysisResults').innerHTML=`<div class="analysis-placeholder">${safe(message)}</div>`;}
+function analysisReset(){
+ analysisLast=null;analysisRecommendations=[];analysisPicked.clear();analysisAllocation=[];
+ $('#analysisExport').disabled=true;$('#analysisAmount').value='';$('#analysisNotes').value='';
+ $('#analysisTargetSummary').textContent='Pilih akun tujuan.';
+ $('#analysisSourceSummary').textContent='Rekomendasi sumber akan ditampilkan setelah analisis.';
+ $('#analysisCount').textContent='0 rekomendasi';
+ $('#analysisSelection').innerHTML='';
+ analysisEmpty('Pilih akun tujuan, isi kebutuhan bila ada, lalu klik Cari Rekomendasi Sumber Dana.');
+}
+function refreshAnalysis(){
+ if(!report){
+  $('#analysisFileLabel').textContent='Buka laporan FA Detail dari dashboard atau riwayat untuk memulai analisis.';
+  $('#analysisProposerChoices').innerHTML='<div class="analysis-choice-message">Belum ada laporan aktif. Buka FA Detail di dashboard terlebih dahulu.</div>';
+  $('#analysisSourceUnitChoices').innerHTML='<div class="analysis-choice-message">Belum ada unit kerja yang dapat ditampilkan.</div>';
+  return;
+ }
+ const currentId=(report.filename||'')+'|'+(report.savedAt||'')+'|'+(report.fileModifiedAt||'')+'|'+report.diagnostics?.pagu+'|'+(report.detailAccounts?.length||0);
+ if(analysisCurrentReport===currentId)return;
+ analysisCurrentReport=currentId;
+ analysisReset();
+ $('#analysisFileLabel').textContent='Laporan aktif · '+(report.periode||'Periode tidak tersedia')+' · '+dateId(report.fileModifiedAt||report.savedAt);
+ const items=analysisItems();
+ $('#analysisUploadStatus').textContent=items.length?`Terhubung ke FA Detail aktif · ${nf(items.length)} rincian akun siap dianalisis.`:'Menyiapkan rincian akun dari FA Detail aktif…';
+ analysisProposer='';
+ analysisSourceUnitAll=true;
+ analysisSourceUnits=new Set();
+ renderAnalysisUnitFilters();
+ $('#analysisTarget').innerHTML='<option value="">Pilih akun tujuan</option>';
+ analysisTargetGroups=[];
+ if(!items.length)analysisEmpty('Menyiapkan rincian akun dari laporan FA Detail aktif. Jika belum tersedia, pastikan Code.gs terbaru terpasang dan laporan dibuka dari dashboard.');
+}
+function getAnalysisTargetGroup(){
+ const i=Number($('#analysisTarget').value);
+ return $('#analysisTarget').value!==''&&Number.isInteger(i)?analysisTargetGroups[i]||null:null;
+}
+function analysisScopeMatches(a,b){
+ if(!a||!b||a.kegiatan!==b.kegiatan||a.kro!==b.kro||a.domain!==b.domain||a.jenis!==b.jenis)return false;
+ // Kategori 524 dan Non-524 adalah dua kelompok yang tidak boleh dicampur.
+ if(b.akun.startsWith('524'))return a.akun.startsWith('524')&&a.kategori==='PERJADIN'&&b.domain==='NONOPERASIONAL';
+ if(b.akun.startsWith('52')&&!b.akun.startsWith('524'))return a.akun.startsWith('52')&&!a.akun.startsWith('524')&&a.kategori==='NON524'&&b.domain==='NONOPERASIONAL';
+ return false;
+}
+function getRecommendationDestination(target,source){
+ // Tujuan harus benar-benar berbeda dari sumber (akun, unit, RO, atau komponen).
+ return target.items.filter(t=>t.id!==source.id).sort((a,b)=>a.sisa-b.sisa)[0]||null;
+}
+function makeAllocation(rec,indices,amount){
+ const selected=indices.map(i=>({index:i,...rec[i]})).filter(x=>x.source&&x.capacity>0);
+ const available=selected.reduce((n,x)=>n+x.capacity,0);
+ let remaining=amount||available;
+ const allocations=[];
+ for(const r of selected){
+  const value=Math.min(remaining,r.capacity);
+  if(value>0)allocations.push({index:r.index,source:r.source,destination:r.destination,amount:value});
+  remaining-=value;if(remaining<=0)break;
+ }
+ return {allocations,available,allocated:(amount||available)-Math.max(0,remaining),remaining:Math.max(0,remaining)};
+}
+function analysisSourceDetail(x){
+ const sub=x.subkomponen?'.'+x.subkomponen:'';
+ return [x.ro||'',x.komponen||'',x.subkomponen||''].filter(Boolean).join('.')+' · '+x.akun;
+}
+function renderAllocationPreview(){
+ if(!analysisLast)return;
+ const amount=analysisLast.amount;
+ const ordered=[...analysisPicked].sort((a,b)=>a-b);
+ const result=makeAllocation(analysisRecommendations,ordered,amount);
+ analysisAllocation=result.allocations;
+ const unitTotals=new Map();
+ result.allocations.forEach(a=>unitTotals.set(a.source.unit,(unitTotals.get(a.source.unit)||0)+a.amount));
+ const units=unitTotals.size;
+ const sourceNames=[...unitTotals.keys()];
+ const sourceNamesLabel=sourceNames.length?sourceNames.map(safe).join(', '):'Belum ada sumber dialokasikan';
+ const amountKnown=amount>0;
+ const fulfilled=amountKnown&&result.remaining===0;
+ const status=!ordered.length?'Belum ada sumber dipilih':!amountKnown?'Kebutuhan belum ditentukan':fulfilled?'Kebutuhan dapat terpenuhi':'Kebutuhan belum terpenuhi';
+ const statusClass=!ordered.length||!amountKnown?'neutral':fulfilled?'':'warn';
+ const gap=amountKnown?result.remaining:0;
+ const conclusion=!ordered.length?'Pilih kandidat di atas atau gunakan Pilih Otomatis untuk membentuk usulan alokasi.':!amountKnown?'Sumber telah dipilih. Masukkan nilai kebutuhan untuk memeriksa apakah alokasi yang tersedia mencukupi.':fulfilled?`Kebutuhan Rp ${nf(amount)} dapat dipenuhi melalui ${sourceNamesLabel}, dengan total simulasi Rp ${nf(result.allocated)}.`:`Dari kebutuhan Rp ${nf(amount)}, baru dapat disimulasikan Rp ${nf(result.allocated)}. Unit sumber yang dialokasikan: ${sourceNamesLabel}. Masih diperlukan tambahan Rp ${nf(gap)} atau penyesuaian kandidat sumber.`;
+ $('#analysisSelection').innerHTML=`<section class="analysis-exec" aria-live="polite"><div class="analysis-exec-head"><h3>Kesimpulan Analisis untuk Pimpinan</h3><span class="analysis-exec-status ${statusClass}">${status}</span></div><div class="analysis-exec-grid"><div class="analysis-exec-kpi"><small>Kebutuhan Anggaran</small><strong>${amountKnown?'Rp '+nf(amount):'Belum diisi'}</strong></div><div class="analysis-exec-kpi"><small>Alokasi yang Dapat Disimulasikan</small><strong>Rp ${nf(result.allocated)}</strong></div><div class="analysis-exec-kpi"><small>${amountKnown?'Kekurangan Anggaran':'Kapasitas Sumber Terpilih'}</small><strong>Rp ${nf(amountKnown?gap:result.available)}</strong></div><div class="analysis-exec-kpi"><small>Unit Kerja Sumber Anggaran</small><strong class="analysis-source-names">${sourceNamesLabel}</strong></div></div><div class="analysis-exec-insight"><strong>Kesimpulan:</strong> ${conclusion}<br><small>Simulasi berdasarkan sisa FA Detail. Kelayakan final tetap memerlukan verifikasi komitmen, blokir, RPD, serta kewenangan revisi.</small></div></section>`;
+ $('#analysisExport').disabled=!result.allocations.length;
+}
+
+function autoPickAnalysis(){
+ if(!analysisLast)return;
+ const amount=analysisLast.amount;
+ if(!amount){$('#analysisSelection').innerHTML='<div class="analysis-result warn">Isi nilai kebutuhan anggaran terlebih dahulu untuk menggunakan Pilih Otomatis.</div>';return;}
+ analysisPicked.clear();let remaining=amount;
+ // Kandidat telah diurutkan berdasarkan kapasitas terbesar.
+ analysisRecommendations.forEach((r,i)=>{if(remaining>0){analysisPicked.add(i);remaining-=Math.min(remaining,r.capacity);}});
+ document.querySelectorAll('[data-pick-source]').forEach(x=>x.checked=analysisPicked.has(Number(x.dataset.pickSource)));
+ renderAllocationPreview();
+}
+function analysisTargetChange(){
+ analysisLast=null;analysisRecommendations=[];analysisPicked.clear();analysisAllocation=[];$('#analysisExport').disabled=true;
+ const target=getAnalysisTargetGroup();
+ $('#analysisCount').textContent='0 rekomendasi';
+ $('#analysisSelection').innerHTML='';
+ if(!target){$('#analysisTargetSummary').textContent='Pilih akun tujuan.';$('#analysisSourceSummary').textContent='Pilih akun tujuan untuk mencari kandidat sumber.';analysisEmpty('Belum ada analisis.');return;}
+ $('#analysisTargetSummary').innerHTML=`<strong>Akun ${safe(target.akun)} · ${safe(target.kro)} · ${safe(target.unit)}</strong><br>Pagu akumulasi Rp ${nf(target.pagu)} · Realisasi Rp ${nf(target.realisasi)} · Sisa akumulasi Rp ${nf(target.sisa)} · ${nf(target.items.length)} rincian alokasi`;
+ $('#analysisSourceSummary').textContent='Klik Cari Rekomendasi untuk melihat sumber dana yang memenuhi aturan.';
+ analysisEmpty('Kandidat belum dihitung.');
+}
+function evaluateAnalysis(){
+ analysisLast=null;analysisRecommendations=[];analysisPicked.clear();analysisAllocation=[];
+ $('#analysisExport').disabled=true;$('#analysisSelection').innerHTML='';
+ const target=getAnalysisTargetGroup(),raw=$('#analysisAmount').value.trim(),notes=$('#analysisNotes').value.trim();
+ const amount=raw?Number(raw):0;
+ if(!target){analysisEmpty('Pilih Unit Kerja Pengusul Revisi dan Akun Tujuan terlebih dahulu.');return;}
+ if(!analysisSourceUnitAll&&!analysisSourceUnits.size){analysisEmpty('Pilih minimal satu unit sumber atau All.');return;}
+ if(raw&&(!Number.isSafeInteger(amount)||amount<=0)){analysisEmpty('Kebutuhan anggaran harus bilangan bulat rupiah positif.');return;}
+ if(!(target.akun.startsWith('524')||target.akun.startsWith('52'))){analysisEmpty('Akun tujuan ini tidak termasuk kelompok belanja 524 atau Non-524 yang dapat disimulasikan.');return;}
+ const sources=analysisItems().filter(x=>analysisScopeMatches(x,target)&&x.sisa>0&&(analysisSourceUnitAll||analysisSourceUnits.has(x.unit)));
+ const rec=sources.map(s=>{
+  const destination=getRecommendationDestination(target,s);
+  return destination?{source:s,destination,capacity:s.sisa,fulfills:amount>0&&s.sisa>=amount}:null;
+ }).filter(Boolean).sort((a,b)=>b.capacity-a.capacity);
+ analysisRecommendations=rec;
+ analysisLast={target,rec,amount,notes,filename:report.filename,periode:report.periode};
+ $('#analysisCount').textContent=rec.length+' kandidat';
+ const kind=target.akun.startsWith('524')?'524xxx':'Non-524 (52xxxx selain 524)';
+ $('#analysisSourceSummary').innerHTML=`<strong>${nf(rec.length)} kandidat sumber</strong> untuk kelompok ${kind}, pada Kegiatan.KRO ${safe(target.kro)}. Akun 6 digit asal boleh berbeda, sepanjang dalam kelompok yang sama dan bukan belanja operasional/modal. ${amount?'Kebutuhan Rp '+nf(amount)+'.':''}`;
+ const actions=rec.length?'<div class="analysis-pick-actions"><button type="button" id="analysisSelectAll">Pilih Semua</button><button type="button" id="analysisAutoPick">Pilih Otomatis</button><button type="button" class="secondary" id="analysisClearPick">Batalkan Pilihan</button></div>':'';
+ const grouped=new Map();
+ rec.forEach((r,i)=>{const unit=r.source.unit;if(!grouped.has(unit))grouped.set(unit,[]);grouped.get(unit).push({r,i});});
+ const clusters=[...grouped.entries()].map(([unit,items])=>{
+  const capacity=items.reduce((n,x)=>n+x.r.capacity,0);
+  const lines=items.map(({r,i})=>`<div class="analysis-advice-row"><div><strong>${safe(analysisSourceDetail(r.source))}</strong><small>Sisa Rp ${nf(r.capacity)} · ${r.fulfills?'Cukup secara individual':'Dapat digabung dengan kandidat lain'}</small></div><label class="analysis-select-source"><input type="checkbox" data-pick-source="${i}"><span>Pilih</span></label></div>`).join('');
+  return `<div class="analysis-cluster"><div class="analysis-cluster-head"><div><strong>${safe(unit)}</strong><br><small>${nf(items.length)} alternatif · Total sisa Rp ${nf(capacity)}</small></div><div class="analysis-cluster-tools"><button type="button" data-pick-unit="${safe(unit)}">Pilih Unit</button><button type="button" class="unit-clear" data-clear-unit="${safe(unit)}">Batal Pilihan</button></div></div><div class="analysis-advice-list">${lines}</div></div>`;
+ }).join('');
+ let message=rec.length?actions+clusters:'<div class="analysis-result warn">Tidak ada kandidat yang memenuhi syarat pada unit sumber terpilih. Periksa kesamaan Kegiatan.KRO, jenis belanja, dan sisa positif.</div>';
+ if(notes)message+=`<div class="analysis-result warn"><strong>Catatan pengusul:</strong> ${safe(notes)}<br><small>Catatan membutuhkan validasi manual, termasuk status kewajiban atau kontrak.</small></div>`;
+ message+='<p class="analysis-explain">Ini simulasi berdasarkan sisa FA Detail, bukan persetujuan revisi. Periksa blokir, komitmen, RPD, dan kewenangan revisi sebelum digunakan.</p>';
+ $('#analysisResults').innerHTML=message;
+ renderAllocationPreview();
+}
+function exportAnalysis(){
+ const a=analysisLast;if(!a||!analysisAllocation.length)return;
+ const rows=[['FA Detail',a.filename],['Periode',a.periode],['Pengusul',a.target.unit],['Akun tujuan',a.target.akun],['Kegiatan.KRO',a.target.kro],['Sisa tujuan akumulasi',a.target.sisa],['Kebutuhan',a.amount||'Belum ditentukan'],['Catatan pengusul',a.notes],[],['Unit Kerja Sumber','Kode Sumber','Akun Sumber','Pagu Semula','Pagu Menjadi','Realisasi','Sisa Semula','Sisa Menjadi','Nominal Pergeseran','Unit Tujuan','Kode Tujuan','Akun Tujuan','Pagu Tujuan Semula','Pagu Tujuan Menjadi']];
+ for(const r of analysisAllocation)rows.push([r.source.unit,r.source.fullCode,r.source.akun,r.source.pagu,r.source.pagu-r.amount,r.source.realisasi,r.source.sisa,r.source.sisa-r.amount,r.amount,r.destination.unit,r.destination.fullCode,r.destination.akun,r.destination.pagu,r.destination.pagu+r.amount]);
+ const esc=x=>'"'+String(x??'').replace(/"/g,'""')+'"';
+ const csv='\ufeff'+rows.map(r=>r.map(esc).join(';')).join('\r\n');
+ const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+ const link=document.createElement('a');link.href=url;link.download='Simulasi_Pergeseran_FA_Detail.csv';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+$('#analysisProposerChoices').addEventListener('change',event=>{
+ const input=event.target;
+ if(!input.matches('input[type="checkbox"]'))return;
+ // Checkbox berperilaku seperti pemilihan tunggal: tidak boleh lebih dari satu.
+ analysisProposer=input.checked?input.value:'';
+ renderAnalysisUnitFilters();
+ refreshAnalysisTargets();
+ $('#analysisProposerMenu').open=false;
+});
+$('#analysisSourceUnitChoices').addEventListener('change',event=>{
+ const input=event.target;
+ if(!input.matches('input[type="checkbox"]'))return;
+ if(input.value==='ALL'){
+  analysisSourceUnitAll=input.checked;
+  analysisSourceUnits.clear();
+ } else {
+  analysisSourceUnitAll=false;
+  if(input.checked)analysisSourceUnits.add(input.value);
+  else analysisSourceUnits.delete(input.value);
+ }
+ renderAnalysisUnitFilters();
+ analysisTargetChange();
+});
+$('#analysisTarget').addEventListener('change',analysisTargetChange);
+$('#analysisAmount').addEventListener('input',()=>{analysisLast=null;$('#analysisExport').disabled=true;});
+$('#analysisNotes').addEventListener('input',()=>{analysisLast=null;$('#analysisExport').disabled=true;});
+$('#analysisResults').addEventListener('change',event=>{
+ const check=event.target.closest('[data-pick-source]');if(!check)return;
+ const index=Number(check.dataset.pickSource);
+ if(check.checked)analysisPicked.add(index);else analysisPicked.delete(index);
+ renderAllocationPreview();
+});
+$('#analysisResults').addEventListener('click',event=>{
+ if(event.target.closest('#analysisSelectAll')){
+  analysisPicked=new Set(analysisRecommendations.map((_,i)=>i));
+  document.querySelectorAll('[data-pick-source]').forEach(x=>x.checked=true);
+  renderAllocationPreview();
+ }
+ const unitButton=event.target.closest('[data-pick-unit]');
+ if(unitButton){
+  const unit=unitButton.dataset.pickUnit;
+  analysisRecommendations.forEach((r,i)=>{if(r.source.unit===unit)analysisPicked.add(i);});
+  document.querySelectorAll('[data-pick-source]').forEach(x=>x.checked=analysisPicked.has(Number(x.dataset.pickSource)));
+  renderAllocationPreview();
+ }
+ const clearUnit=event.target.closest('[data-clear-unit]');
+ if(clearUnit){
+  const unit=clearUnit.dataset.clearUnit;
+  analysisRecommendations.forEach((r,i)=>{if(r.source.unit===unit)analysisPicked.delete(i);});
+  document.querySelectorAll('[data-pick-source]').forEach(x=>x.checked=analysisPicked.has(Number(x.dataset.pickSource)));
+  renderAllocationPreview();
+ }
+ if(event.target.closest('#analysisAutoPick'))autoPickAnalysis();
+ if(event.target.closest('#analysisClearPick')){
+  analysisPicked.clear();document.querySelectorAll('[data-pick-source]').forEach(x=>x.checked=false);renderAllocationPreview();
+ }
+});
+$('#analysisEvaluate').addEventListener('click',evaluateAnalysis);
+$('#analysisExport').addEventListener('click',exportAnalysis);
+$('#analysisReset').addEventListener('click',()=>{analysisCurrentReport=null;refreshAnalysis();});
+
+
+// Rekap jenis belanja 521, 522, 524 hanya dari rincian akun yang sah.
+// Tidak menggunakan agregat NON524 yang mencakup beberapa prefiks akun.
+const NONOP_TYPES=[['521','Belanja Barang'],['522','Belanja Jasa'],['524','Belanja Perjalanan Dinas']];
+let nonopLastRows=[];
+function collectNonop(){
+ const grouped=new Map();
+ const items=Array.isArray(report?.detailAccounts)?report.detailAccounts:[];
+ for(const x of items){
+  if(!x || !/^5\d{5}$/.test(String(x.akun||'')))continue;
+  const prefix=String(x.akun).slice(0,3);
+  if(!NONOP_TYPES.some(t=>t[0]===prefix))continue;
+  if(x.domain!=='NONOPERASIONAL')continue;
+  if(['OPERASIONAL_GAJI','OPERASIONAL_BARANG','NON_OPERASIONAL_MODAL','MODAL_LAIN','GAJI_LAIN','LAINNYA'].includes(x.kategori))continue;
+  if(!x.unit || x.unit==='BELUM TERPETAKAN')continue;
+  const key=x.unit+'|'+prefix;
+  if(!grouped.has(key))grouped.set(key,{unit:x.unit,akun:prefix,pagu:0,realisasi:0,sisa:0});
+  const item=grouped.get(key);
+  item.pagu+=Number(x.pagu)||0;
+  item.realisasi+=Number(x.realisasi)||0;
+ }
+ for(const item of grouped.values())item.sisa=item.pagu-item.realisasi;
+ return [...grouped.values()];
+}
+function refreshNonop(){
+ const select=$('#nonopUnit'),status=$('#nonopStatus');
+ if(!report){status.style.display='block';status.textContent='Belum ada FA Detail aktif. Unggah atau pilih riwayat pada Dashboard.';$('#nonopCards').innerHTML='';$('#nonopTable').innerHTML='';return;}
+ const units=(report.unitOrder||[]).filter(u=>u && u!=='BELUM TERPETAKAN');
+ const previous=select.value;
+ select.innerHTML='<option value="ALL">All — Seluruh Unit Kerja</option>'+units.map(u=>`<option value="${safe(u)}">${safe(u)}</option>`).join('');
+ select.value=units.includes(previous)?previous:'ALL';
+ const data=collectNonop();
+ if(!Array.isArray(report.detailAccounts)||!report.detailAccounts.length){
+  status.style.display='block';status.textContent='Rincian akun 6 digit belum tersedia pada laporan aktif. Jika ini riwayat lama, aplikasi akan mencoba membacanya dari PDF arsip. Jika PDF arsip tidak tersedia, unggah FA Detail baru di Dashboard.';
+  $('#nonopCards').innerHTML='';$('#nonopTable').innerHTML='';return;
+ }
+ status.style.display='none';
+ const active=select.value==='ALL'?units:[select.value];
+ const byUnit=new Map(active.map(u=>[u,Object.fromEntries(NONOP_TYPES.map(([k])=>[k,{pagu:0,realisasi:0,sisa:0}]))]));
+ for(const item of data){if(byUnit.has(item.unit))byUnit.get(item.unit)[item.akun]=item;}
+ const totals=Object.fromEntries(NONOP_TYPES.map(([k])=>[k,{pagu:0,realisasi:0,sisa:0}]));
+ const rows=[];
+ for(const [unit,types] of byUnit){
+  const sum={pagu:0,realisasi:0,sisa:0};
+  for(const [key,label] of NONOP_TYPES){const v=types[key];for(const field of ['pagu','realisasi','sisa']){sum[field]+=v[field];totals[key][field]+=v[field];}}
+  rows.push({unit,types,sum});
+ }
+ const grand={pagu:0,realisasi:0,sisa:0};
+ for(const [key] of NONOP_TYPES)for(const field of ['pagu','realisasi','sisa'])grand[field]+=totals[key][field];
+ $('#nonopCards').innerHTML=NONOP_TYPES.map(([key,label])=>`<div class="nonop-card"><div class="tag">${key} · ${label}</div><strong>Rp ${nf(totals[key].pagu)}</strong><small>Realisasi Rp ${nf(totals[key].realisasi)}</small><small>Sisa Rp ${nf(totals[key].sisa)}</small></div>`).join('');
+ const fmtCells=x=>`<td>${nf(x.pagu)}</td><td>${nf(x.realisasi)}</td><td>${nf(x.sisa)}</td>`;
+ let html='<table class="nonop-table"><thead><tr><th>Unit Kerja / Jenis Belanja</th><th>Pagu Revisi (Rp)</th><th>Realisasi (Rp)</th><th>Sisa Anggaran (Rp)</th></tr></thead><tbody>';
+ nonopLastRows=[];
+ for(const r of rows){
+  html+=`<tr class="nonop-head"><td>${safe(r.unit)}</td>${fmtCells(r.sum)}</tr>`;
+  nonopLastRows.push([r.unit,'TOTAL',r.sum.pagu,r.sum.realisasi,r.sum.sisa]);
+  for(const [key,label] of NONOP_TYPES){const v=r.types[key];html+=`<tr><td>${key} · ${safe(label)}</td>${fmtCells(v)}</tr>`;nonopLastRows.push([r.unit,key,v.pagu,v.realisasi,v.sisa]);}
+ }
+ if(select.value==='ALL'){
+  html+='<tr class="nonop-subtotal"><td>Subtotal per Jenis Belanja (Seluruh Unit)</td><td colspan="3"></td></tr>';
+  for(const [key,label] of NONOP_TYPES){const v=totals[key];html+=`<tr><td>${key} · ${safe(label)}</td>${fmtCells(v)}</tr>`;}
+ }
+ html+=`<tr class="nonop-grand"><td>JUMLAH TOTAL</td>${fmtCells(grand)}</tr></tbody></table>`;
+ $('#nonopTable').innerHTML=html;
+}
+function exportNonop(){
+ if(!report||!nonopLastRows.length)return;
+ const cells=[['Unit Kerja','Jenis Belanja','Pagu Revisi','Realisasi','Sisa Anggaran'],...nonopLastRows];
+ const csv='\ufeff'+cells.map(row=>row.map(cell=>'"'+String(cell).replace(/"/g,'""')+'"').join(';')).join('\r\n');
+ const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+ const link=document.createElement('a');link.href=url;link.download='Rekap_Nonoperasional_521_522_524.csv';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+$('#nonopUnit').addEventListener('change',refreshNonop);
+$('#nonopExport').addEventListener('click',exportNonop);
+$('#nonopBack').addEventListener('click',()=>navigateTo('overview'));
+
+function navigateTo(target){
+ document.body.classList.toggle('analysis-mode',target==='simulasi');
+ document.body.classList.toggle('nonop-mode',target==='jenisBelanja');
+ document.querySelectorAll('.navtab').forEach(b=>b.classList.toggle('active',b.dataset.target===target));
+ if(target==='simulasi') { refreshAnalysis(); ensureAnalysisDetails(); window.scrollTo({top:0,behavior:'smooth'}); }
+ else if(target==='jenisBelanja') { refreshNonop();if(report && !analysisItems().length)ensureAnalysisDetails().then(refreshNonop);window.scrollTo({top:0,behavior:'smooth'}); }
+ else { requestAnimationFrame(()=>document.getElementById(target).scrollIntoView({behavior:'smooth',block:'start'})); }
+}
+document.querySelectorAll('.navtab').forEach(btn=>btn.addEventListener('click',()=>navigateTo(btn.dataset.target)));
+$('#analysisBack').addEventListener('click',()=>navigateTo('overview'));
+
+$('#refreshHistory').addEventListener('click',reloadHistory);
+$('#openHistory').addEventListener('click',async()=>{
+ const id=$('#historySelect').value;if(!id){info('Pilih laporan dari daftar riwayat terlebih dahulu.',true);return;}
+ try{info('Membuka riwayat FA Detail…');const loaded=await runServer('getFaHistory',id);analysisActiveHistoryId=id;analysisActivePdf=null;report=loaded.report;report.skipped=report.skipped||0;showReport();showFileInfo(loaded.metadata,'history');info('Riwayat ditampilkan: '+loaded.metadata.filename);if(document.body.classList.contains('analysis-mode'))await ensureAnalysisDetails();}
+ catch(e){info('Gagal membuka riwayat: '+(e.message||e),true);}
+});
+$('#cancelUpload').addEventListener('click',()=>{pending=null;modal(false);info('Unggahan dibatalkan. Tampilan sebelumnya tidak berubah.');});
+$('#continueUpload').addEventListener('click',()=>{
+ if(!pending)return;
+ const p=pending;analysisActivePdf=p.file;analysisActiveHistoryId='';report={...p.data,skipped:p.skipped,fileModifiedAt:p.fileModifiedAt};pending=null;modal(false);showReport();showFileInfo({filename:p.filename,fileModifiedAt:p.fileModifiedAt},'temporary');info('FA Detail ditampilkan tanpa menyimpan riwayat.');
+});
+$('#saveUpload').addEventListener('click',async()=>{
+ if(!pending)return;const p=pending,btn=$('#saveUpload');btn.disabled=true;$('#cancelUpload').disabled=true;$('#continueUpload').disabled=true;
+ try{
+  info('Menyimpan PDF dan rekapitulasi ke Supabase…');
+  const pdfBase64=await readFileBase64(p.file);
+  const meta=await runServer('saveFaHistory',{report:tanpaLockPagu({...p.data,skipped:p.skipped}),pdfBase64,filename:p.filename,fileModifiedAt:p.fileModifiedAt});
+  analysisActivePdf=p.file;analysisActiveHistoryId='';report={...p.data,skipped:p.skipped,fileModifiedAt:p.fileModifiedAt,savedAt:meta.savedAt};pending=null;modal(false);showReport();showFileInfo(meta,'history');info('FA Detail berhasil disimpan ke riwayat.');await reloadHistory();
+  $('#historySelect').value=historyItems.find(x=>x.id===meta.id)?.fileId||'';
+ }catch(e){info('Gagal menyimpan riwayat: '+(e.message||e)+'. Anda masih dapat memilih lanjut tanpa menyimpan.',true);}
+ finally{btn.disabled=false;$('#cancelUpload').disabled=false;$('#continueUpload').disabled=false;}
+});
+// Riwayat dimuat setelah berhasil login Supabase.
+$('#exportButton').addEventListener('click',csvExport);
+$('#pdfFile').addEventListener('change',async e=>{
+ const file=e.target.files[0];if(!file)return;
+ try{
+  if(!/\.pdf$/i.test(file.name))throw Error('Pilih file PDF FA Detail.');
+  info('Memulai pembacaan PDF…');const parsed=await pdfToRows(file);
+  info(`Memproses ${nf(parsed.rows.length)} baris akun…`);
+  const data=await runServer('prosesFaDetail',{...parsed,filename:file.name});
+  const fileModifiedAt=file.lastModified?new Date(file.lastModified).toISOString():'';
+  pending={file,data,skipped:parsed.skipped,filename:file.name,fileModifiedAt};
+  $('#decisionSummary').textContent=`${file.name} · ${dateId(fileModifiedAt)} · ${nf(data.diagnostics.barisAkun)} baris akun. Tanggal tersebut berasal dari waktu modifikasi file, bukan bukti tanggal unduh.`;
+  modal(true);info('PDF berhasil dianalisis. Pilih tindakan pada jendela konfirmasi.');
+ }catch(err){info(err.message||String(err),true);}finally{e.target.value='';}
+});
+</script>
+<script>
+(async function initSupabaseAuth(){
+ const gate=document.getElementById('loginGate'),error=document.getElementById('authError');
+ const client=window.sbAdapter&&window.sbAdapter.client;
+ if(!client){error.textContent='Konfigurasi belum lengkap. Edit config.js dengan Project URL dan publishable key.';return;}
+ let userId=null;
+ async function present(session){
+   const user=session?.user;
+   const nextId=user?.id||null;
+   if(nextId!==userId){userId=nextId;if(user){await reloadHistory();}else{report=null;historyItems=[];document.getElementById('results').style.display='none';}}
+   document.body.classList.toggle('signed-in',!!user);
+   gate.style.display=user?'none':'flex';
+   document.getElementById('logoutButton').style.display=user?'inline-block':'none';
+ }
+ const {data,error:sessionError}=await client.auth.getSession();
+ if(sessionError)error.textContent=sessionError.message;
+ await present(data?.session);
+ client.auth.onAuthStateChange((_event,session)=>{present(session).catch(e=>{error.textContent=e.message;});});
+ document.getElementById('loginForm').addEventListener('submit',async e=>{
+   e.preventDefault();const btn=document.getElementById('authSubmit');
+   btn.disabled=true;error.textContent='';
+   try{
+    const {error:e}=await client.auth.signInWithPassword({email:document.getElementById('authEmail').value.trim(),password:document.getElementById('authPassword').value});
+    if(e)throw e;
+    document.getElementById('authPassword').value='';
+   }catch(e){error.textContent=e.message||String(e);}finally{btn.disabled=false;}
+ });
+ document.getElementById('logoutButton').addEventListener('click',async()=>{await client.auth.signOut();location.reload();});
+})();
+</script>
+</body></html>
